@@ -1,5 +1,15 @@
 #!/bin/bash
-VERSION=${VERSION:=3.5.1}
+
+set -euo pipefail
+
+VERSION=$1
+
+if [ -z "$VERSION" ];
+then
+    echo 'version number required'
+    exit 1
+fi
+
 wget https://cran.uni-muenster.de/src/base/R-3/R-$VERSION.tar.gz
 sudo mkdir /opt/R/
 sudo chown $(whoami) /opt/R/

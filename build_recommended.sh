@@ -1,7 +1,17 @@
 #!/bin/bash
-VERSION=${VERSION:=3.5.1}
-rm -r R/
-rm -r R.orig/
+
+set -euo pipefail
+
+VERSION=$1
+
+if [ -z "$VERSION" ];
+then
+    echo 'version number required'
+    exit 1
+fi
+
+rm -rf R/
+rm -rf R.orig/
 unzip R-$VERSION.zip -d R.orig/
 mkdir -p R/library
 
@@ -11,6 +21,5 @@ do
    mv R.orig/library/$package/ R/library/$package/
 done
 chmod -R 755 R/
-rm recommended.zip
+rm -f recommended.zip
 zip -r recommended.zip R/
-aws lambda publish-layer-version --layer-name r-recommended --zip-file fileb://recommended.zip

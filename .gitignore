@@ -1,3 +1,5 @@
 *.zip
 R/
 R.orig/
+*.log
+input.txt
