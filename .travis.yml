@@ -1,11 +1,13 @@
-language: generic
-cache: pip
+language: bash
+cache:
+  directories:
+  - $HOME/.cache/pip
 matrix:
   include:
   - name: R 3.5.1
     env: R_VERSION=3.5.1
 before_install:
-- pip install awscli
+- pip install --user awscli
 script: "./build.sh $R_VERSION"
 deploy:
 - provider: script
