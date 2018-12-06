@@ -12,7 +12,7 @@ fi
 
 rm -rf R/
 rm -rf R.orig/
-unzip R-$VERSION.zip -d R.orig/
+unzip -q R-$VERSION.zip -d R.orig/
 mkdir -p R/library
 
 recommended=(boot class cluster codetools foreign KernSmooth lattice MASS Matrix mgcv nlme nnet rpart spatial survival)
@@ -22,4 +22,4 @@ do
 done
 chmod -R 755 R/
 rm -f recommended.zip
-zip -r recommended.zip R/
+zip -r -q recommended.zip R/

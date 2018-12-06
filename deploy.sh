@@ -40,7 +40,6 @@ regions=(us-east-1 us-east-2
          eu-central-1 
          eu-west-1 eu-west-2 eu-west-3 
          sa-east-1)
-regions=(us-east-2)
 
 for region in "${regions[@]}"
 do

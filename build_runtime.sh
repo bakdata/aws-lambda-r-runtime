@@ -11,7 +11,7 @@ then
 fi
 
 rm -rf R/
-unzip R-$VERSION.zip -d R/
+unzip -q R-$VERSION.zip -d R/
 rm -r R/doc/manual/
 #remove some libraries to save space
 recommended=(boot class cluster codetools foreign KernSmooth lattice MASS Matrix mgcv nlme nnet rpart spatial survival)
@@ -21,4 +21,4 @@ do
 done
 chmod -R 755 bootstrap runtime.r R/
 rm -f runtime.zip
-zip -r runtime.zip runtime.r bootstrap R/
+zip -r -q runtime.zip runtime.r bootstrap R/

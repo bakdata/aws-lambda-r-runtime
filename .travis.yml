@@ -8,8 +8,10 @@ before_install:
 - pip install awscli
 script: "./build.sh $R_VERSION"
 deploy:
-  provider: script
+- provider: script
   script: bash deploy.sh
+  on:
+    branch: feature/travis-deployment
 env:
   global:
   - AWS_DEFAULT_REGION: eu-central-1
