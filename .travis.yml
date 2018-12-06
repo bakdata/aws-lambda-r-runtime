@@ -1,7 +1,10 @@
+language: python
 matrix:
   include:
   - name: R 3.5.1
     env: R_VERSION=3.5.1
+before_install:
+  - pip install awscli
 script: "./build.sh $R_VERSION"
 env:
   global:
