@@ -1,0 +1,22 @@
+language: bash
+cache:
+  directories:
+  - $HOME/.cache/pip
+matrix:
+  include:
+  - name: R 3.5.1
+    env: R_VERSION=3.5.1
+before_install:
+- pip install --user awscli
+script: "./build.sh $R_VERSION"
+deploy:
+- provider: script
+  script: bash deploy.sh $R_VERSION
+  skip_cleanup: true
+  on:
+    branch: master
+env:
+  global:
+  - AWS_DEFAULT_REGION: eu-central-1
+  - secure: lcvzavlau1syMM1uMZVSIHMUu8nGA9zN3KLqfJ4OiVVNEYxK0wrRtJKJyLCZM+SfEGoUkreLRLjEcQePDAV5+0A1xPEc+hnCWbDjAsl5Cj2t3ei76dKM5xwEAspMGaw+D1kwgWrreJXYzDvVDbgNc74XH49TpGMyKc4XGxFpvoixY5CjsYgigrvNn9OGfNjZkku99TRdxjBE14cmxtAwS3tMM5PL45Of4ZyrJ4Jl1Jeo5qncihNfHWDvSySb0MhdSBpYvXLPLffUS8tTurvwkRWEwcdPmjok04g+gKElvyEwUx1YmRvALBW7YdJ8Z58OaYIDhi7MGL6AM5fguPy+ldHy97zzVzhExIo5gdSM+IHVtjzPwTeICIT/Jh1OjbjN2wcnbV197LBdIHqSaaLibTuxlFwig6BFPq2hmWYu3ChtmheyVza8pZ9XTuutoWhO92uTvClJzI3cuD+pAFRKslnhIgClP5ifd1JA9HnzB/29bSGVwG5SD7dP11eTxfhXX44xfDkRPzs+GOTZH7Tc63AjuSayR7RM2IE//036LoRNRDZC4NCNrjKyBW2tROtR+BW06cY077kEmt2I4jEyHXb74ivsmD2JLSjCX5kf3oBI71zk/xWkM0NHV4ASVODzyyUShaYar+q2K/j4JqJQnATAMrwpK/yJopHMIa4Jx9A=
+  - secure: GIVFD4H5E1Azi+41/lZqg3DX1dYu0oMaIOkr9GOY1UrzAmCgXRJ9A3P3b6UxGTltANy26jVROrDbeBhKrys5xUyPaUJTWV2oJEn8aMXbIQU9hQlxgRwJRLxBA1BkD6G59N52hlvV1K6p+jsrklHpB6NOvHrzH8Dsf17A9vtXb3FhPrDM+3aZIWNhib69w56kGqF9scJcBEAnjK9GAaz80jzwS620h3jn4gtft0gWKm80DB9wytBC/MuckfrMp9XkRKuRGFeFcgJaXRJzfd1Od4UnJCmbWdRB8bhHZUhW/0BtbgS+kjHm+zDAqqInYyx9Fv1dH1AeanLGxu3CsJJe5obNjeMtXKBKzTWf9n8IbLCi3jg050CVZ7zh2MP/gPZVdVvkmPAi1ZZDMwZhrAaLauZN9giFnOssE1lVkzZGmXgg24QWUFMh6x/ZKPj+krlb1V0aqoeTRwLHSupgrAj4q7qmkRFmxnb1RBeVrYvq8FnmV98dp8PsCNYvtaeqMK6A04WRA8hQwo+9nk/bTOpC9gzEGDZuMicpT6M0NIRsE0QCoYAreaWYz+ahBKBSprjwpQc8y+fBWGlWKT9Xs5eJvyrUVF5/2AJKYX/gUhfIMYrVKNZeub9iVksKl5xDbo/IS78M3r2/qLP+9SQQxvArsZ7ru1c52x+wY3sXMb6XQLM=
