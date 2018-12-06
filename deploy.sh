@@ -16,7 +16,7 @@ function releaseToRegion {
     layer=$3
     bucket="aws-lambda-r-runtime.$region"
     resource="R-$version/$layer.zip"
-    layer_name="test-r-$layer-$version"
+    layer_name="r-$layer-$version"
     layer_name="${layer_name//\./_}"
     echo "publishing layer $layer_name to region $region"
     aws s3 cp $layer.zip s3://$bucket/$resource --region $region

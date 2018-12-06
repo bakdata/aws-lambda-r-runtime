@@ -1,5 +1,7 @@
 # aws-lambda-r-runtime
 
+[![Build Status](https://travis-ci.com/bakdata/aws-lambda-r-runtime.svg?branch=master)](https://travis-ci.com/bakdata/aws-lambda-r-runtime)
+
 This package makes it easy to run AWS Lambda Functions written in R.
 
 ## Example
@@ -7,7 +9,6 @@ To run the example, we need to create a IAM role executing our lambda.
 This role should have the following properties:
 - Trusted entity – Lambda.
 - Permissions – AWSLambdaBasicExecutionRole.
-- Role name – example-lambda-r-role.
 
 Furthermore you need a current version of the AWS CLI.
 
@@ -19,7 +20,7 @@ zip function.zip script.r
 aws lambda create-function --function-name r-example \
     --zip-file fileb://function.zip --handler script.handler \
     --runtime provided --timeout 60 \
-    --layers arn:aws:lambda:eu-central-1:131329294410:layer:r-runtime:10 \
+    --layers arn:aws:lambda:eu-central-1:131329294410:layer:r-runtime-3_5_1:1 \
     --role <role-arn> --region eu-central-1
 ```
 
@@ -47,8 +48,8 @@ zip function.zip matrix.r
 aws lambda create-function --function-name r-matrix-example \
     --zip-file fileb://function.zip --handler matrix.handler \
     --runtime provided --timeout 60 --memory-size 3008 \
-    --layers arn:aws:lambda:eu-central-1:131329294410:layer:r-runtime:10 \
-        arn:aws:lambda:eu-central-1:131329294410:layer:r-recommended:1 \
+    --layers arn:aws:lambda:eu-central-1:131329294410:layer:r-runtime-3_5_1:1 \
+        arn:aws:lambda:eu-central-1:131329294410:layer:r-recommended-3_5_1:1 \
     --role <role-arn> --region eu-central-1
 ```
 
@@ -65,26 +66,63 @@ The expected result should look similar to this:
 {"result":[4,5,6]}
 ```
 
-## Layers
+## Provided layers
 
 Layers are only accessible in the AWS region they were published.
 We provide the following layers:
 
 ### r-runtime
 
-R 3.5.1, httr, jsonlite, aws.s3
+R, httr, jsonlite, aws.s3
 
-- eu-central-1: arn:aws:lambda:eu-central-1:131329294410:layer:r-runtime:10
-- us-east-1: arn:aws:lambda:us-east-1:131329294410:layer:r-runtime:1
+Available AWS regions:
+- ap-northeast-1
+- ap-northeast-2
+- ap-south-1
+- ap-southeast-1
+- ap-southeast-2
+- ca-central-1
+- eu-central-1
+- eu-west-1
+- eu-west-2
+- eu-west-3
+- sa-east-1
+- us-east-1
+- us-east-2
+- us-west-1
+- us-west-2
+
+Available R versions:
+- 3_5_1
+
+ARN: `arn:aws:lambda:${region}:131329294410:layer:r-runtime-${version}:1`
 
 ### r-recommended
 
-The recommended packages that ship with R 3.5.1:
+The recommended packages that ship with R:
 boot, class, cluster, codetools, foreign, KernSmooth, lattice, MASS, Matrix, mgcv, nlme, nnet, rpart, spatial, survival
 
-- eu-central-1: arn:aws:lambda:eu-central-1:131329294410:layer:r-recommended:1
-- us-east-1: arn:aws:lambda:us-east-1:131329294410:layer:r-recommended:1
+Available AWS regions:
+- ap-northeast-1
+- ap-northeast-2
+- ap-south-1
+- ap-southeast-1
+- ap-southeast-2
+- ca-central-1
+- eu-central-1
+- eu-west-1
+- eu-west-2
+- eu-west-3
+- sa-east-1
+- us-east-1
+- us-east-2
+- us-west-1
+- us-west-2
 
+Available R versions:
+- 3_5_1
+
+ARN: `arn:aws:lambda:${region}:131329294410:layer:r-recommended-${version}:1`
 
 ## Documentation
 
@@ -96,9 +134,9 @@ The lambda payload is unwrapped as named arguments to the R function to call, e.
 The lambda function returns whatever is returned by the R function as a JSON object with `result` as a root element.
 
 In order to install additional R packages, you can create a lambda layer containing the libraries, just as in the second example.
-The file structure must be `R/library/MY_LIBRARY`.
-See `build_recommended_layer.sh` for an example.
-If you need system libraries, place them in `R/lib/`.
+The file structure must be `R/library/<MY_LIBRARY>`.
+See `build_recommended.sh` for an example.
+If your package requires system libraries, place them in `R/lib/`.
 
 ## Limitations
 
@@ -116,8 +154,8 @@ Start an EC2 instance which uses the [Lambda AMI](https://console.aws.amazon.com
 aws ec2 run-instances --image-id ami-657bd20a --count 1 --instance-type t2.micro --key-name <MyKeyPair>
 ```
 
-You can customize the R version by setting the `VERSION` variable.
+You must pass the R version as a parameter to the script, e.g., `3.5.1`.
 The script produces a zip containing a functional R installation in `/opt/R/`.
-Place this archive in the repository and run the `build_runtime.sh` script.
+Place this archive in the repository and run the `build_runtime_and_publish.sh` script.
 This creates a lambda layer named `r-runtime` in your AWS account.
 You can use it as shown in the example.
