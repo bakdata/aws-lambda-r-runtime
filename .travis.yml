@@ -7,6 +7,7 @@ matrix:
   - name: R 3.5.1
     env: R_VERSION=3.5.1
 before_install:
+- sudo apt-get install --only-upgrade python2.7
 - pip install --user awscli
 script: "./build.sh $R_VERSION"
 deploy:
