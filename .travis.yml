@@ -9,7 +9,8 @@ before_install:
 script: "./build.sh $R_VERSION"
 deploy:
 - provider: script
-  script: bash deploy.sh
+  script: bash deploy.sh $R_VERSION
+  skip_cleanup: true
   on:
     branch: feature/travis-deployment
 env:
