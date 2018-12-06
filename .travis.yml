@@ -1,4 +1,4 @@
-language: python
+language: bash
 cache: pip
 matrix:
   include:
@@ -12,7 +12,7 @@ deploy:
   script: bash deploy.sh $R_VERSION
   skip_cleanup: true
   on:
-    branch: feature/travis-deployment
+    branch: master
 env:
   global:
   - AWS_DEFAULT_REGION: eu-central-1
