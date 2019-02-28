@@ -46,4 +46,6 @@ for region in "${regions[@]}"
 do
    releaseToRegion $VERSION $region runtime
    releaseToRegion $VERSION $region recommended
+   aws s3 cp s3://aws-lambda-r-runtime/R-$VERSION/awspack.zip .
+   releaseToRegion $VERSION $region awspack
 done
