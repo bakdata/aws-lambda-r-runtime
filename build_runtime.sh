@@ -19,6 +19,6 @@ for package in "${recommended[@]}"
 do
    rm -r R/library/$package/
 done
-chmod -R 755 bootstrap runtime.r R/
+chmod -R 755 bootstrap runtime.R R/
 rm -f runtime.zip
-zip -r -q runtime.zip runtime.r bootstrap R/
+zip -r -q runtime.zip runtime.R bootstrap R/
