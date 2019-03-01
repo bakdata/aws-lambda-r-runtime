@@ -126,6 +126,33 @@ Available R versions:
 
 ARN: `arn:aws:lambda:${region}:131329294410:layer:r-recommended-${version}:1`
 
+### r-awspack-
+
+The [awspack package](https://cran.r-project.org/web/packages/awspack/index.html):
+
+Available AWS regions:
+- ap-northeast-1
+- ap-northeast-2
+- ap-south-1
+- ap-southeast-1
+- ap-southeast-2
+- ca-central-1
+- eu-central-1
+- eu-north-1
+- eu-west-1
+- eu-west-2
+- eu-west-3
+- sa-east-1
+- us-east-1
+- us-east-2
+- us-west-1
+- us-west-2
+
+Available R versions:
+- 3_5_1
+
+ARN: `arn:aws:lambda:${region}:131329294410:layer:r-awspack-${version}:1`
+
 ## Documentation
 
 The lambda handler is used to determine both the file name of the R script and the function to call.
