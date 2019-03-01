@@ -15,8 +15,8 @@ Furthermore you need a current version of the AWS CLI.
 Then create a lambda function which uses the R runtime layer:
 ```bash
 cd example/
-chmod 755 script.r
-zip function.zip script.r
+chmod 755 script.R
+zip function.zip script.R
 aws lambda create-function --function-name r-example \
     --zip-file fileb://function.zip --handler script.handler \
     --runtime provided --timeout 60 \
@@ -43,8 +43,8 @@ We also provide a layer which ships with some recommended R packages, such as `M
 This example lambda shows how to use them:
 ```bash
 cd example/
-chmod 755 matrix.r
-zip function.zip matrix.r
+chmod 755 matrix.R
+zip function.zip matrix.R
 aws lambda create-function --function-name r-matrix-example \
     --zip-file fileb://function.zip --handler matrix.handler \
     --runtime provided --timeout 60 --memory-size 3008 \
