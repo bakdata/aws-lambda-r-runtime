@@ -137,6 +137,7 @@ The lambda function returns whatever is returned by the R function as a JSON obj
 
 In order to install additional R packages, you can create a lambda layer containing the libraries, just as in the second example.
 You must use the the compiled package files.
+The easiest way is to install the package with `install.packages()` and copy the resulting folder in `$R_LIBS`.
 Using only the package sources does not suffice.
 The file structure must be `R/library/<MY_LIBRARY>`.
 See `build_recommended.sh` for an example.
