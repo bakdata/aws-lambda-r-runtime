@@ -136,6 +136,9 @@ The lambda payload is unwrapped as named arguments to the R function to call, e.
 The lambda function returns whatever is returned by the R function as a JSON object with `result` as a root element.
 
 In order to install additional R packages, you can create a lambda layer containing the libraries, just as in the second example.
+You must use the the compiled package files.
+The easiest way is to install the package with `install.packages()` and copy the resulting folder in `$R_LIBS`.
+Using only the package sources does not suffice.
 The file structure must be `R/library/<MY_LIBRARY>`.
 See `build_recommended.sh` for an example.
 If your package requires system libraries, place them in `R/lib/`.
@@ -151,13 +154,17 @@ This must be considered when writing to the local disk.
 ## Building
 
 To build the layer yourself, you need to first build R from source.
-Start an EC2 instance which uses the [Lambda AMI](https://console.aws.amazon.com/ec2/v2/home#Images:visibility=public-images;search=amzn-ami-hvm-2017.03.1.20170812-x86_64-gp2) and run the `build_r.sh` script:
+Start an EC2 instance which uses the [Lambda AMI](https://console.aws.amazon.com/ec2/v2/home#Images:visibility=public-images;search=amzn-ami-hvm-2017.03.1.20170812-x86_64-gp2):
 ```bash
-aws ec2 run-instances --image-id ami-657bd20a --count 1 --instance-type t2.micro --key-name <MyKeyPair>
+aws ec2 run-instances --image-id ami-657bd20a --count 1 --instance-type t2.medium --key-name <MyKeyPair>
 ```
-
+Now run the `build_r.sh` script.
 You must pass the R version as a parameter to the script, e.g., `3.5.1`.
-The script produces a zip containing a functional R installation in `/opt/R/`.
-Place this archive in the repository and run the `build_runtime_and_publish.sh` script.
+The script produces a zip containing a functional R installation in `/opt/R/`, e.g., `/opt/R/R-3.5.1.zip`.
+Use this R distribution in the following.
+
+With a compiled R distribution, you can build the runtime layer.
+If you plan to publish the runtime, you need to have a recent version of aws cli (>=1.16).
+Copy the R distribution to this repository and run the `build_runtime_and_publish.sh` script.
 This creates a lambda layer named `r-runtime` in your AWS account.
 You can use it as shown in the example.
