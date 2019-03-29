@@ -1,5 +1,7 @@
 language: bash
 dist: xenial
+services:
+  - docker
 cache:
   directories:
   - $HOME/.cache/pip
@@ -9,7 +11,9 @@ matrix:
     env: R_VERSION=3.5.1
 before_install:
 - pip install --user awscli
-script: "./build.sh $R_VERSION"
+script: 
+- "./build.sh $R_VERSION"
+- "./test.sh $R_VERSION"
 deploy:
 - provider: script
   script: bash deploy.sh $R_VERSION

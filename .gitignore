@@ -3,3 +3,7 @@ R/
 R.orig/
 *.log
 input.txt
+sam.pid
+__pycache__/
+.idea
+*.iml
