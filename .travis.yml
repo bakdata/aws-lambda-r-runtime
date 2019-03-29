@@ -11,6 +11,7 @@ matrix:
     env: R_VERSION=3.5.1
 before_install:
 - pip install --user awscli
+- pip install --user aws-sam-cli
 script: 
 - "./build.sh $R_VERSION"
 - "./test.sh $R_VERSION"
