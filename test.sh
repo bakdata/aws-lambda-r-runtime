@@ -45,7 +45,7 @@ awsLayerVersion=$version_number
 
 ./start_server.sh $runtimeLayer $recommendedLayer $awsLayer
 python -m unittest discover
-aws lambda delete-layer-version --layer-name $runtimeLayerName --version-number $runtimeLayerVersion
-aws lambda delete-layer-version --layer-name $recommendedLayerName --version-number $recommendedLayerVersion
-aws lambda delete-layer-version --layer-name $awsLayerName --version-number $awsLayerVersion
+aws lambda delete-layer-version --layer-name $runtimeLayerName --version-number $runtimeLayerVersion --region $region
+aws lambda delete-layer-version --layer-name $recommendedLayerName --version-number $recommendedLayerVersion --region $region
+aws lambda delete-layer-version --layer-name $awsLayerName --version-number $awsLayerVersion --region $region
 ./stop_server.sh
