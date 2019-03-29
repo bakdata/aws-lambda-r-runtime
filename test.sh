@@ -37,5 +37,5 @@ releaseToRegion $VERSION $region awspack
 awsLayer=$layer_arn
 
 ./start_server.sh $runtimeLayer $recommendedLayer $awsLayer
-python -m unittest
+python -m unittest discover
 ./stop_server.sh
