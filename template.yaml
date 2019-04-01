@@ -1,12 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
-Parameters:
-  RuntimeLayer:
-    Type: String
-  RecommendedLayer:
-    Type: String
-  AWSLayer:
-    Type: String
 Globals:
   Function:
     Runtime: provided
@@ -18,3 +11,18 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: script.handler
+  RuntimeLayer:
+    Type: AWS::Serverless::LayerVersion
+      Properties:
+        LayerName: runtime
+        ContentUri: build/runtime/
+  RecommendedLayer:
+    Type: AWS::Serverless::LayerVersion
+      Properties:
+        LayerName: runtime
+        ContentUri: build/recommended/
+  AWSLayer:
+    Type: AWS::Serverless::LayerVersion
+      Properties:
+        LayerName: runtime
+        ContentUri: build/awspack/

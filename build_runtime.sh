@@ -10,8 +10,11 @@ then
     exit 1
 fi
 
-rm -rf R/
-unzip -q R-$VERSION.zip -d R/
+rm -rf build/runtime/
+mkdir -p build/runtime/
+cp src/* build/runtime/
+cd build/runtime/
+unzip -q ../../R-$VERSION.zip -d R/
 rm -r R/doc/manual/
 #remove some libraries to save space
 recommended=(boot class cluster codetools foreign KernSmooth lattice MASS Matrix mgcv nlme nnet rpart spatial survival)
@@ -22,3 +25,5 @@ done
 chmod -R 755 bootstrap runtime.R R/
 rm -f runtime.zip
 zip -r -q runtime.zip runtime.R bootstrap R/
+mkdir -p ../layers/
+mv runtime.zip ../layers/
