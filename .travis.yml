@@ -1,7 +1,7 @@
 language: bash
 dist: xenial
 services:
-  - docker
+- docker
 cache:
   directories:
   - $HOME/.cache/pip
@@ -14,7 +14,7 @@ before_install:
 - pip install --user aws-sam-cli
 script: 
 - "./build.sh $R_VERSION"
-- "./test.sh $R_VERSION"
+- "./test.sh"
 deploy:
 - provider: script
   script: bash deploy.sh $R_VERSION

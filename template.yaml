@@ -5,7 +5,7 @@ Globals:
     Runtime: provided
     CodeUri: tests/R/
     Layers:
-      - !Ref RuntimeLayer
+    - !Ref RuntimeLayer
 Resources:
   ExampleFunction:
     Type: 'AWS::Serverless::Function'
@@ -13,16 +13,16 @@ Resources:
       Handler: script.handler
   RuntimeLayer:
     Type: AWS::Serverless::LayerVersion
-      Properties:
-        LayerName: runtime
-        ContentUri: build/runtime/
+    Properties:
+      LayerName: runtime
+      ContentUri: build/runtime/
   RecommendedLayer:
     Type: AWS::Serverless::LayerVersion
-      Properties:
-        LayerName: runtime
-        ContentUri: build/recommended/
+    Properties:
+      LayerName: runtime
+      ContentUri: build/recommended/
   AWSLayer:
     Type: AWS::Serverless::LayerVersion
-      Properties:
-        LayerName: runtime
-        ContentUri: build/awspack/
+    Properties:
+      LayerName: runtime
+      ContentUri: build/awspack/
