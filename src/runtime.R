@@ -8,7 +8,7 @@ EVENT_DATA <- args[1]
 REQUEST_ID <- args[2]
 
 HANDLER_split <- strsplit(HANDLER, ".", fixed = TRUE)[[1]]
-file_name <- paste0(HANDLER_split[1], ".r")
+file_name <- paste0(HANDLER_split[1], ".R")
 function_name <- HANDLER_split[2]
 print(paste0("Sourcing '", file_name, "'"))
 source(file_name)
