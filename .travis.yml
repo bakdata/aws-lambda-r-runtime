@@ -13,8 +13,7 @@ before_install:
 - pip install --user awscli
 - pip install --user aws-sam-cli
 script: 
-- "./build.sh $R_VERSION"
-- "./test.sh"
+- "./build.sh $R_VERSION && ./test.sh"
 deploy:
 - provider: script
   script: bash deploy.sh $R_VERSION

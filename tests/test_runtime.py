@@ -4,9 +4,9 @@ import boto3
 import botocore
 
 
-class TestLambdaR(unittest.TestCase):
+class TestRuntimeLayer(unittest.TestCase):
 
-    def test(self):
+    def test_script(self):
         lambda_client = boto3.client('lambda',
                                      region_name="eu-central-1",
                                      endpoint_url="http://127.0.0.1:3001",
