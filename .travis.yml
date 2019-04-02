@@ -12,8 +12,8 @@ matrix:
     - name: R 3.5.1
       env: R_VERSION=3.5.1
 before_install:
-  - pip3 install --user awscli
-  - pip3 install --user aws-sam-cli
+  - pip3 install awscli
+  - pip3 install aws-sam-cli
 script:
   - "LOGLEVEL=INFO ./build.sh $R_VERSION && python3 -m unittest"
 deploy:
