@@ -73,7 +73,11 @@ We provide the following layers:
 
 ### r-runtime
 
-R, httr, jsonlite, aws.s3
+R,
+[httr](https://cran.r-project.org/package=httr),
+[jsonlite](https://cran.r-project.org/package=jsonlite),
+[aws.s3](https://cran.r-project.org/package=aws.s3),
+[logging](https://cran.r-project.org/package=logging)
 
 Available AWS regions:
 - ap-northeast-1
@@ -101,7 +105,21 @@ ARN: `arn:aws:lambda:${region}:131329294410:layer:r-runtime-${version}:1`
 ### r-recommended
 
 The recommended packages that ship with R:
-boot, class, cluster, codetools, foreign, KernSmooth, lattice, MASS, Matrix, mgcv, nlme, nnet, rpart, spatial, survival
+boot,
+class,
+cluster,
+codetools,
+foreign,
+KernSmooth,
+lattice,
+MASS,
+Matrix,
+mgcv,
+nlme,
+nnet,
+rpart,
+spatial,
+survival
 
 Available AWS regions:
 - ap-northeast-1
@@ -128,7 +146,7 @@ ARN: `arn:aws:lambda:${region}:131329294410:layer:r-recommended-${version}:1`
 
 ### r-awspack
 
-The [awspack package](https://cran.r-project.org/web/packages/awspack/index.html):
+The [awspack](https://cran.r-project.org/package=awspack) package
 
 Available AWS regions:
 - ap-northeast-1
