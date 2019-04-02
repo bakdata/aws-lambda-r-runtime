@@ -12,7 +12,7 @@ file_name <- paste0(HANDLER_split[1], ".R")
 function_name <- HANDLER_split[2]
 print(paste0("Sourcing '", file_name, "'"))
 source(file_name)
-print(paste0("Invoking function '", function_name, "'' with parameters:"))
+print(paste0("Invoking function '", function_name, "' with parameters:"))
 params <- fromJSON(EVENT_DATA)
 print(params)
 result <- do.call(function_name, params)

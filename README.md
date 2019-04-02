@@ -126,7 +126,7 @@ Available R versions:
 
 ARN: `arn:aws:lambda:${region}:131329294410:layer:r-recommended-${version}:1`
 
-### r-awspack-
+### r-awspack
 
 The [awspack package](https://cran.r-project.org/web/packages/awspack/index.html):
 

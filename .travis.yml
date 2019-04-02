@@ -14,8 +14,9 @@ matrix:
 before_install:
   - pip3 install awscli
   - pip3 install aws-sam-cli
+install: true
 script:
-  - "LOGLEVEL=INFO ./build.sh $R_VERSION && python3 -m unittest"
+  - "./build.sh $R_VERSION && LOGLEVEL=INFO python3 -m unittest"
 deploy:
   - provider: script
     script: bash deploy.sh $R_VERSION
