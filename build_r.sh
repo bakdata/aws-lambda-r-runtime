@@ -34,4 +34,5 @@ cp /usr/lib64/libstdc++.so.6 lib/
 sudo yum install -y openssl-devel libxml2-devel
 ./bin/Rscript -e 'chooseCRANmirror(graphics=FALSE, ind=34); install.packages("httr")'
 ./bin/Rscript -e 'chooseCRANmirror(graphics=FALSE, ind=34); install.packages("aws.s3")'
+./bin/Rscript -e 'chooseCRANmirror(graphics=FALSE, ind=34); install.packages("logging")'
 zip -r R-$VERSION.zip bin/ lib/ lib64/ etc/ library/ doc/ modules/ share/
