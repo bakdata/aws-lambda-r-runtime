@@ -19,9 +19,9 @@ function releaseToRegion {
     layer_name="r-$layer-$version"
     layer_name="${layer_name//\./_}"
     echo "publishing layer $layer_name to region $region"
-    aws s3 cp $layer.zip s3://$bucket/$resource --region $region
+    aws s3 cp build/layers/$layer.zip s3://$bucket/$resource --region $region
     response=$(aws lambda publish-layer-version --layer-name $layer_name \
-        --content S3Bucket=$bucket,S3Key=$resource --region $region)
+        --content S3Bucket=$bucket,S3Key=$resource --license-info MIT --region $region)
     version_number=$(jq -r '.Version' <<< "$response")
     aws lambda add-layer-version-permission --layer-name $layer_name \
         --version-number $version_number --principal "*" \
@@ -44,8 +44,8 @@ regions=(us-east-1 us-east-2
 
 for region in "${regions[@]}"
 do
+   mkdir -p build/layers/
    releaseToRegion $VERSION $region runtime
    releaseToRegion $VERSION $region recommended
-   aws s3 cp s3://aws-lambda-r-runtime/R-$VERSION/awspack.zip .
    releaseToRegion $VERSION $region awspack
 done

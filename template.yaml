@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Globals:
+  Function:
+    Runtime: provided
+    CodeUri: tests/R/
+    Layers:
+    - !Ref RuntimeLayer
+Resources:
+  ExampleFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: script.handler
+  RuntimeLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: runtime
+      ContentUri: build/runtime/
+  RecommendedLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: runtime
+      ContentUri: build/recommended/
+  AWSLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: runtime
+      ContentUri: build/awspack/
