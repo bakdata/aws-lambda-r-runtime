@@ -13,7 +13,7 @@ def wait_for_port(port: int, host: str = 'localhost', interval: int = 10, retrie
             logging.info("Try %s/%s: Connecting to %s:%s", i, retries, host, port)
             s = socket.create_connection((host, port))
             s.close()
-            print("Try %s/%s: Connection succeeded".format(i, retries))
+            logging.info("Try %s/%s: Connection succeeded", i, retries)
             return True
         except ConnectionRefusedError as e:
             logging.info("Try %s/%s: Connection to %s:%s not possible: %s. Waiting %ss",
