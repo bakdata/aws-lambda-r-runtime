@@ -2,12 +2,12 @@
 
 set -euo pipefail
 
-VERSION=$1
-
-if [ -z "$VERSION" ];
+if [[ -z ${1+x} ]];
 then
     echo 'version number required'
     exit 1
+else
+    VERSION=$1
 fi
 
 function releaseToRegion {
