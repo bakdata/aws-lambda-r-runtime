@@ -10,6 +10,5 @@ else
     VERSION=$1
 fi
 
-./build_r.sh $VERSION
-aws s3 cp /opt/R/R-$VERSION.zip \
-    s3://aws-lambda-r-runtime/R-$VERSION/R-$VERSION.zip
+./compile.sh $VERSION
+aws s3 cp build/dist/R-$VERSION.zip s3://aws-lambda-r-runtime/R-$VERSION/

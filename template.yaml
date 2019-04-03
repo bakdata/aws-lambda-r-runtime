@@ -15,14 +15,14 @@ Resources:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: runtime
-      ContentUri: build/runtime/
+      ContentUri: runtime/build/layer/
   RecommendedLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: runtime
-      ContentUri: build/recommended/
+      ContentUri: recommended/build/layer/
   AWSLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: runtime
-      ContentUri: build/awspack/
+      ContentUri: awspack/build/layer/

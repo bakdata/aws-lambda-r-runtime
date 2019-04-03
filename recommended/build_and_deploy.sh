@@ -10,5 +10,5 @@ else
     VERSION=$1
 fi
 
-./build_awspack.sh
-aws s3 cp awspack.zip s3://aws-lambda-r-runtime/R-$VERSION/
+./build.sh $VERSION
+aws lambda publish-layer-version --layer-name r-recommended --zip-file fileb://build/dist/recommended.zip

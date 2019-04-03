@@ -10,10 +10,13 @@ else
     VERSION=$1
 fi
 
-rm -rf build/recommended/
-mkdir -p build/recommended/
-cd build/recommended/
-unzip -q ../../R-$VERSION.zip -d R.orig/
+BASE_DIR=$(pwd)
+BUILD_DIR=$BASE_DIR/build/
+
+rm -rf $BUILD_DIR
+mkdir -p $BUILD_DIR/layer/
+cd $BUILD_DIR/layer/
+unzip -q $BASE_DIR/../r/build/dist/R-$VERSION.zip -d R.orig/
 mkdir -p R/library
 
 recommended=(boot class cluster codetools foreign KernSmooth lattice MASS Matrix mgcv nlme nnet rpart spatial survival)
@@ -23,7 +26,6 @@ do
 done
 rm -rf R.orig/
 chmod -R 755 R/
-rm -f recommended.zip
 zip -r -q recommended.zip R/
-mkdir -p ../layers/
-mv recommended.zip ../layers/
+mkdir -p $BUILD_DIR/dist/
+mv recommended.zip $BUILD_DIR/dist/

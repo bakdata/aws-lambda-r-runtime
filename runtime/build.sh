@@ -10,11 +10,14 @@ else
     VERSION=$1
 fi
 
-rm -rf build/runtime/
-mkdir -p build/runtime/
-cp src/* build/runtime/
-cd build/runtime/
-unzip -q ../../R-$VERSION.zip -d R/
+BASE_DIR=$(pwd)
+BUILD_DIR=$BASE_DIR/build/
+
+rm -rf $BUILD_DIR
+mkdir -p $BUILD_DIR/layer/
+cp $BASE_DIR/src/* $BUILD_DIR/layer/
+cd $BUILD_DIR/layer/
+unzip -q $BASE_DIR/../r/build/dist/R-$VERSION.zip -d R/
 rm -r R/doc/manual/
 #remove some libraries to save space
 recommended=(boot class cluster codetools foreign KernSmooth lattice MASS Matrix mgcv nlme nnet rpart spatial survival)
@@ -23,7 +26,6 @@ do
    rm -r R/library/$package/
 done
 chmod -R 755 bootstrap runtime.R R/
-rm -f runtime.zip
 zip -r -q runtime.zip runtime.R bootstrap R/
-mkdir -p ../layers/
-mv runtime.zip ../layers/
+mkdir -p $BUILD_DIR/dist/
+mv runtime.zip $BUILD_DIR/dist/

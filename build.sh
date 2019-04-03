@@ -10,7 +10,12 @@ else
     VERSION=$1
 fi
 
-aws s3 cp s3://aws-lambda-r-runtime/R-$VERSION/R-$VERSION.zip .
-./build_runtime.sh $VERSION
-./build_recommended.sh $VERSION
-./unpack_awspack.sh $VERSION
+BASE_DIR=$(pwd)
+cd $BASE_DIR/r
+./build.sh $VERSION
+cd $BASE_DIR/runtime
+./build.sh $VERSION
+cd $BASE_DIR/recommended
+./build.sh $VERSION
+cd $BASE_DIR/awspack
+./build.sh $VERSION
