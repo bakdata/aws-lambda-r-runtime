@@ -185,7 +185,7 @@ You must use the the compiled package files.
 The easiest way is to install the package with `install.packages()` and copy the resulting folder in `$R_LIBS`.
 Using only the package sources does not suffice.
 The file structure must be `R/library/<MY_LIBRARY>`.
-See `build_recommended.sh` for an example.
+See `awspack/compile.sh` for an example.
 If your package requires system libraries, place them in `R/lib/`.
 
 ## Limitations
@@ -203,13 +203,21 @@ Start an EC2 instance which uses the [Lambda AMI](https://console.aws.amazon.com
 ```bash
 aws ec2 run-instances --image-id ami-657bd20a --count 1 --instance-type t2.medium --key-name <MyKeyPair>
 ```
-Now run the `build_r.sh` script.
+Now run the `r/compile.sh` script.
 You must pass the R version as a parameter to the script, e.g., `3.5.1`.
-The script produces a zip containing a functional R installation in `/opt/R/`, e.g., `/opt/R/R-3.5.1.zip`.
+The script produces a zip containing a functional R installation in `/opt/R/`.
+The zipped distirbution can be found in `r/build/dist/R-3.5.1.zip`
 Use this R distribution in the following.
 
-With a compiled R distribution, you can build the runtime layer.
+With a compiled R distribution, you can build the different layers.
 If you plan to publish the runtime, you need to have a recent version of aws cli (>=1.16).
-Copy the R distribution to this repository and run the `build_runtime_and_publish.sh` script.
-This creates a lambda layer named `r-runtime` in your AWS account.
+Copy the R distribution to this repository and run the `<layer>build_and_deploy.sh` script.
+This creates a lambda layer named `r-<layer>` in your AWS account.
 You can use it as shown in the example.
+
+### Testing
+
+After building all layers, you can test it locally with SAM CLI.
+Install it via `pip install --user aws-sam-cli`.
+Then run `python3 -m unittest`.
+This will spawn a local lambda server via docker and invokes the lambdas defined in `template.yaml`.
