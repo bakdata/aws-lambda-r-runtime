@@ -100,7 +100,8 @@ Available AWS regions:
 Available R versions:
 - 3_5_1
 
-ARN: `arn:aws:lambda:${region}:131329294410:layer:r-runtime-${version}:1`
+ARN: `arn:aws:lambda:${region}:131329294410:layer:r-runtime-${version}:14`
+ARN (eu-north-1): `arn:aws:lambda:${region}:131329294410:layer:r-runtime-${version}:11`
 
 ### r-recommended
 
@@ -142,7 +143,8 @@ Available AWS regions:
 Available R versions:
 - 3_5_1
 
-ARN: `arn:aws:lambda:${region}:131329294410:layer:r-recommended-${version}:1`
+ARN: `arn:aws:lambda:${region}:131329294410:layer:r-recommended-${version}:14`
+ARN (eu-north-1): `arn:aws:lambda:${region}:131329294410:layer:r-recommended-${version}:11`
 
 ### r-awspack
 
@@ -169,7 +171,7 @@ Available AWS regions:
 Available R versions:
 - 3_5_1
 
-ARN: `arn:aws:lambda:${region}:131329294410:layer:r-awspack-${version}:1`
+ARN: `arn:aws:lambda:${region}:131329294410:layer:r-awspack-${version}:7`
 
 ## Documentation
 
