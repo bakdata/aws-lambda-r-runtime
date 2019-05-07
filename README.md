@@ -20,7 +20,7 @@ zip function.zip script.R
 aws lambda create-function --function-name r-example \
     --zip-file fileb://function.zip --handler script.handler \
     --runtime provided --timeout 60 \
-    --layers arn:aws:lambda:eu-central-1:131329294410:layer:r-runtime-3_5_1:1 \
+    --layers arn:aws:lambda:eu-central-1:131329294410:layer:r-runtime-3_5_1:14 \
     --role <role-arn> --region eu-central-1
 ```
 
@@ -48,8 +48,8 @@ zip function.zip matrix.R
 aws lambda create-function --function-name r-matrix-example \
     --zip-file fileb://function.zip --handler matrix.handler \
     --runtime provided --timeout 60 --memory-size 3008 \
-    --layers arn:aws:lambda:eu-central-1:131329294410:layer:r-runtime-3_5_1:1 \
-        arn:aws:lambda:eu-central-1:131329294410:layer:r-recommended-3_5_1:1 \
+    --layers arn:aws:lambda:eu-central-1:131329294410:layer:r-runtime-3_5_1:14 \
+        arn:aws:lambda:eu-central-1:131329294410:layer:r-recommended-3_5_1:14 \
     --role <role-arn> --region eu-central-1
 ```
 
