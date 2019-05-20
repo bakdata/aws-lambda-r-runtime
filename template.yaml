@@ -16,15 +16,15 @@ Resources:
     Properties:
       Handler: matrix.handler
       Layers:
+        - !Ref RecommendedLayer
         - !Ref RuntimeLayer
-#        - !Ref RecommendedLayer
   AWSFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: aws.handler
       Layers:
+        - !Ref AWSLayer
         - !Ref RuntimeLayer
-#        - !Ref AWSLayer
   RuntimeLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
