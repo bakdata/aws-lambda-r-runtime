@@ -13,7 +13,7 @@ class TestRecommendedLayer(unittest.TestCase):
 
     def test_matrix(self):
         lambda_client = self.lambda_server.get_client()
-        response = lambda_client.invoke(FunctionName="MatrixFunction", Payload=json.dumps({'x': 1}))
+        response = lambda_client.invoke(FunctionName="MatrixFunction", Payload=json.dumps({}))
         payload = response['Payload'].read().decode('utf-8')
         result = json.loads(payload)['result']
         self.assertEqual(len(result), 3)
