@@ -31,7 +31,7 @@ zlib-devel bzip2 bzip2-libs
 sudo yum install -y R 
 
 cd $R_DIR
-./configure --prefix=$R_DIR --exec-prefix=$R_DIR --with-libpth-prefix=/opt/
+./configure --prefix=$R_DIR --exec-prefix=$R_DIR --with-libpth-prefix=/opt/ --enable-R-shlib
 make
 cp /usr/lib64/libgfortran.so.3 lib/
 cp /usr/lib64/libgomp.so.1 lib/
