@@ -1,5 +1,5 @@
 library(Matrix)
 
-handler <- function(x) {
+handler <- function() {
     return(Matrix(1:6, 3, 2)[, 2])
 }
