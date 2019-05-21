@@ -17,18 +17,22 @@ Then create a lambda function which uses the R runtime layer:
 cd example/
 chmod 755 script.R
 zip function.zip script.R
+region=$(aws configure get region)
+runtime_layer=$(aws lambda list-layer-versions \
+    --layer-name arn:aws:lambda:$region:131329294410:layer:r-runtime-3_6_0 \
+    --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
 aws lambda create-function --function-name r-example \
     --zip-file fileb://function.zip --handler script.handler \
     --runtime provided --timeout 60 \
-    --layers arn:aws:lambda:eu-central-1:131329294410:layer:r-runtime-3_5_1:14 \
-    --role <role-arn> --region eu-central-1
+    --layers $runtime_layer \
+    --role <role-arn>
 ```
 
 The function simply increments 'x' by 1.
 Invoke the function:
 ```bash
 aws lambda invoke --function-name r-example \
-    --payload '{"x":1}' --region eu-central-1 response.txt
+    --payload '{"x":1}' response.txt
 cat response.txt
 ```
 
@@ -45,19 +49,24 @@ This example lambda shows how to use them:
 cd example/
 chmod 755 matrix.R
 zip function.zip matrix.R
+region=$(aws configure get region)
+runtime_layer=$(aws lambda list-layer-versions \
+    --layer-name arn:aws:lambda:$region:131329294410:layer:r-runtime-3_6_0 \
+    --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
+recommended_layer=$(aws lambda list-layer-versions \
+    --layer-name arn:aws:lambda:$region:131329294410:layer:r-recommended-3_6_0 \
+    --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
 aws lambda create-function --function-name r-matrix-example \
     --zip-file fileb://function.zip --handler matrix.handler \
     --runtime provided --timeout 60 --memory-size 3008 \
-    --layers arn:aws:lambda:eu-central-1:131329294410:layer:r-runtime-3_5_1:14 \
-        arn:aws:lambda:eu-central-1:131329294410:layer:r-recommended-3_5_1:14 \
-    --role <role-arn> --region eu-central-1
+    --layers $runtime_layer $recommended_layer \
+    --role <role-arn>
 ```
 
 The function returns the second column of some static matrix.
 Invoke the function:
 ```bash
-aws lambda invoke --function-name r-matrix-example \
-    --region eu-central-1 response.txt
+aws lambda invoke --function-name r-matrix-example response.txt
 cat response.txt
 ```
 
@@ -99,9 +108,15 @@ Available AWS regions:
 
 Available R versions:
 - 3_5_1
+- 3_5_3
+- 3_6_0
 
-ARN: `arn:aws:lambda:${region}:131329294410:layer:r-runtime-${version}:14`
-ARN (eu-north-1): `arn:aws:lambda:${region}:131329294410:layer:r-runtime-${version}:11`
+Latest ARN: 
+```bash
+$(aws lambda list-layer-versions \
+    --layer-name arn:aws:lambda:${region}:131329294410:layer:r-runtime-${r_version} \
+    --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
+```
 
 ### r-recommended
 
@@ -142,9 +157,15 @@ Available AWS regions:
 
 Available R versions:
 - 3_5_1
+- 3_5_3
+- 3_6_0
 
-ARN: `arn:aws:lambda:${region}:131329294410:layer:r-recommended-${version}:14`
-ARN (eu-north-1): `arn:aws:lambda:${region}:131329294410:layer:r-recommended-${version}:11`
+Latest ARN:
+```bash
+$(aws lambda list-layer-versions \
+    --layer-name arn:aws:lambda:${region}:131329294410:layer:r-recommended-${r_version} \
+    --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
+```
 
 ### r-awspack
 
@@ -170,8 +191,15 @@ Available AWS regions:
 
 Available R versions:
 - 3_5_1
+- 3_5_3
+- 3_6_0
 
-ARN: `arn:aws:lambda:${region}:131329294410:layer:r-awspack-${version}:7`
+Latest ARN:
+```bash
+$(aws lambda list-layer-versions \
+    --layer-name arn:aws:lambda:${region}:131329294410:layer:r-awspack-${r_version} \
+    --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
+```
 
 ## Documentation
 
@@ -206,14 +234,14 @@ Start an EC2 instance which uses the [Lambda AMI](https://console.aws.amazon.com
 aws ec2 run-instances --image-id ami-657bd20a --count 1 --instance-type t2.medium --key-name <MyKeyPair>
 ```
 Now run the `r/compile.sh` script.
-You must pass the R version as a parameter to the script, e.g., `3.5.1`.
+You must pass the R version as a parameter to the script, e.g., `3.6.0`.
 The script produces a zip containing a functional R installation in `/opt/R/`.
-The zipped distirbution can be found in `r/build/dist/R-3.5.1.zip`
+The zipped distirbution can be found in `r/build/dist/R-3.6.0.zip`
 Use this R distribution in the following.
 
 With a compiled R distribution, you can build the different layers.
 If you plan to publish the runtime, you need to have a recent version of aws cli (>=1.16).
-Copy the R distribution to this repository and run the `<layer>build_and_deploy.sh` script.
+Now run the `<layer>/build_and_deploy.sh` script.
 This creates a lambda layer named `r-<layer>` in your AWS account.
 You can use it as shown in the example.
 
