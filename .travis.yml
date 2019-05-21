@@ -11,6 +11,8 @@ matrix:
   include:
     - name: R 3.5.1
       env: R_VERSION=3.5.1
+    - name: R 3.5.3
+      env: R_VERSION=3.5.3
     - name: R 3.6.0
       env: R_VERSION=3.6.0
 before_install:
