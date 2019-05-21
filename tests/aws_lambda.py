@@ -1,3 +1,4 @@
+import logging
 from subprocess import Popen
 
 import boto3
@@ -28,6 +29,8 @@ class LocalLambdaServer:
 
     def kill(self):
         self.process.kill()
+        return_code = self.process.wait()
+        logging.info('Killed server with code %s', return_code)
 
     def wait(self, interval: int = 10, retries: int = 6):
         wait_for_port(self.port, self.host, interval=interval, retries=retries)
