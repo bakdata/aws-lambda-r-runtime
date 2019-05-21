@@ -5,6 +5,7 @@ Globals:
     Runtime: provided
     CodeUri: tests/R/
     Timeout: 300
+    MemorySize: 3008
     Layers:
       - !Ref RuntimeLayer
 Resources:

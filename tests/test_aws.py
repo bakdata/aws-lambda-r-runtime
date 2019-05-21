@@ -11,7 +11,6 @@ class TestAWSLayer(unittest.TestCase):
     def setUpClass(cls):
         cls.lambda_server = start_local_lambda()
 
-    @unittest.skip
     def test_s3_get_object(self):
         lambda_client = self.lambda_server.get_client()
         response = lambda_client.invoke(FunctionName="AWSFunction")
