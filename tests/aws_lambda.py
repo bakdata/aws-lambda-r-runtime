@@ -15,7 +15,7 @@ class LocalLambdaServer:
 
     def get_client(self):
         config = botocore.client.Config(signature_version=botocore.UNSIGNED,
-                                        read_timeout=120,
+                                        read_timeout=300,
                                         retries={'max_attempts': 0},
                                         )
         return boto3.client('lambda',

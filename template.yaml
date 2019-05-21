@@ -4,7 +4,7 @@ Globals:
   Function:
     Runtime: provided
     CodeUri: tests/R/
-    Timeout: 60
+    Timeout: 300
     Layers:
       - !Ref RuntimeLayer
 Resources:
