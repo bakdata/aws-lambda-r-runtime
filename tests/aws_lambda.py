@@ -1,3 +1,4 @@
+import logging
 from subprocess import Popen
 
 import boto3
@@ -15,7 +16,7 @@ class LocalLambdaServer:
 
     def get_client(self):
         config = botocore.client.Config(signature_version=botocore.UNSIGNED,
-                                        read_timeout=120,
+                                        read_timeout=300,
                                         retries={'max_attempts': 0},
                                         )
         return boto3.client('lambda',
@@ -28,6 +29,8 @@ class LocalLambdaServer:
 
     def kill(self):
         self.process.kill()
+        return_code = self.process.wait()
+        logging.info('Killed server with code %s', return_code)
 
     def wait(self, interval: int = 10, retries: int = 6):
         wait_for_port(self.port, self.host, interval=interval, retries=retries)

@@ -4,13 +4,29 @@ Globals:
   Function:
     Runtime: provided
     CodeUri: tests/R/
+    Timeout: 300
+    MemorySize: 3008
     Layers:
-    - !Ref RuntimeLayer
+      - !Ref RuntimeLayer
 Resources:
   ExampleFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: script.handler
+  MatrixFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: matrix.handler
+      Layers:
+        - !Ref RuntimeLayer
+        - !Ref RecommendedLayer
+  AWSFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: aws.handler
+      Layers:
+        - !Ref RuntimeLayer
+        - !Ref AWSLayer
   RuntimeLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
