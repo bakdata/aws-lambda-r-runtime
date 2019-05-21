@@ -16,7 +16,7 @@ before_install:
   - pip3 install aws-sam-cli
 install: true
 script:
-  - "./build.sh $R_VERSION && LOGLEVEL=INFO python3 -m unittest"
+  - "./build.sh $R_VERSION && python3 -m unittest"
 deploy:
   - provider: script
     script: bash deploy.sh $R_VERSION
