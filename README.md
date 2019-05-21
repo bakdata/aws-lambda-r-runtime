@@ -17,14 +17,16 @@ Then create a lambda function which uses the R runtime layer:
 cd example/
 chmod 755 script.R
 zip function.zip script.R
+# current region
 region=$(aws configure get region)
+# latest runtime layer ARN for R 3.6.0
 runtime_layer=$(aws lambda list-layer-versions \
-    --layer-name arn:aws:lambda:$region:131329294410:layer:r-runtime-3_6_0 \
+    --layer-name arn:aws:lambda:${region}:131329294410:layer:r-runtime-3_6_0 \
     --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
 aws lambda create-function --function-name r-example \
     --zip-file fileb://function.zip --handler script.handler \
     --runtime provided --timeout 60 \
-    --layers $runtime_layer \
+    --layers ${runtime_layer} \
     --role <role-arn>
 ```
 
@@ -49,17 +51,20 @@ This example lambda shows how to use them:
 cd example/
 chmod 755 matrix.R
 zip function.zip matrix.R
+# current region
 region=$(aws configure get region)
+# latest runtime layer ARN for R 3.6.0
 runtime_layer=$(aws lambda list-layer-versions \
-    --layer-name arn:aws:lambda:$region:131329294410:layer:r-runtime-3_6_0 \
+    --layer-name arn:aws:lambda:${region}:131329294410:layer:r-runtime-3_6_0 \
     --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
+# latest recommended layer ARN for R 3.6.0
 recommended_layer=$(aws lambda list-layer-versions \
-    --layer-name arn:aws:lambda:$region:131329294410:layer:r-recommended-3_6_0 \
+    --layer-name arn:aws:lambda:${region}:131329294410:layer:r-recommended-3_6_0 \
     --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
 aws lambda create-function --function-name r-matrix-example \
     --zip-file fileb://function.zip --handler matrix.handler \
     --runtime provided --timeout 60 --memory-size 3008 \
-    --layers $runtime_layer $recommended_layer \
+    --layers ${runtime_layer} ${recommended_layer} \
     --role <role-arn>
 ```
 
