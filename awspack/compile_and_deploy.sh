@@ -10,5 +10,13 @@ else
     VERSION=$1
 fi
 
+if [[ -z ${2+x} ]];
+then
+    echo 'bucket name required'
+    exit 1
+else
+    BUCKET=$2
+fi
+
 ./compile.sh
-aws s3 cp build/dist/awspack.zip s3://aws-lambda-r-runtime/R-$VERSION/
+aws s3 cp build/dist/awspack.zip s3://${BUCKET}/R-${VERSION}/

@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/bakdata/aws-lambda-r-runtime.svg?branch=master)](https://travis-ci.com/bakdata/aws-lambda-r-runtime)
 
-This package makes it easy to run AWS Lambda Functions written in R.
+This project makes it easy to run AWS Lambda Functions written in R.
 
 ## Example
 To run the example, we need to create a IAM role executing our lambda.
