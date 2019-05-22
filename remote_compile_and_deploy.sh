@@ -26,7 +26,7 @@ else
     PROFILE=$3
 fi
 
-aws ec2 run-instances --image-id ami-657bd20a --count 1 --instance-type t2.medium \
+instance_id=$(aws ec2 run-instances --image-id ami-657bd20a --count 1 --instance-type t2.medium \
     --instance-initiated-shutdown-behavior terminate --iam-instance-profile Name='"'${PROFILE}'"' \
     --user-data '#!/bin/bash
 yum install -y git
@@ -35,4 +35,12 @@ cd aws-lambda-r-runtime/r/
 ./compile_and_deploy.sh '"$VERSION $BUCKET"'
 cd ../awspack/
 ./compile_and_deploy.sh '"$VERSION $BUCKET"'
-systemctl poweroff'
+shutdown -h now' \
+    --query 'Instances[0].InstanceId' --output text)
+
+until aws ec2 wait instance-terminated --instance-ids ${instance_id} 2>/dev/null
+do
+    echo "Still waiting for $instance_id to terminate"
+    sleep 10
+done
+
