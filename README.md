@@ -20,9 +20,9 @@ zip function.zip script.R
 # current region
 region=$(aws configure get region)
 # latest runtime layer ARN for R 3.6.0
-runtime_layer=$(aws lambda list-layer-versions \
+runtime_layer=$(aws lambda list-layer-versions --max-items 1 --no-paginate  \
     --layer-name arn:aws:lambda:${region}:131329294410:layer:r-runtime-3_6_0 \
-    --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
+    --query 'LayerVersions[0].LayerVersionArn' --output text)
 aws lambda create-function --function-name r-example \
     --zip-file fileb://function.zip --handler script.handler \
     --runtime provided --timeout 60 \
@@ -54,13 +54,13 @@ zip function.zip matrix.R
 # current region
 region=$(aws configure get region)
 # latest runtime layer ARN for R 3.6.0
-runtime_layer=$(aws lambda list-layer-versions \
+runtime_layer=$(aws lambda list-layer-versions --max-items 1 --no-paginate  \
     --layer-name arn:aws:lambda:${region}:131329294410:layer:r-runtime-3_6_0 \
-    --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
+    --query 'LayerVersions[0].LayerVersionArn' --output text)
 # latest recommended layer ARN for R 3.6.0
-recommended_layer=$(aws lambda list-layer-versions \
+recommended_layer=$(aws lambda list-layer-versions --max-items 1 --no-paginate  \
     --layer-name arn:aws:lambda:${region}:131329294410:layer:r-recommended-3_6_0 \
-    --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
+    --query 'LayerVersions[0].LayerVersionArn' --output text)
 aws lambda create-function --function-name r-matrix-example \
     --zip-file fileb://function.zip --handler matrix.handler \
     --runtime provided --timeout 60 --memory-size 3008 \
@@ -118,9 +118,9 @@ Available R versions:
 
 Latest ARN: 
 ```bash
-$(aws lambda list-layer-versions \
-    --layer-name arn:aws:lambda:${region}:131329294410:layer:r-runtime-${r_version} \
-    --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
+$(aws lambda list-layer-versions --max-items 1 --no-paginate  \
+    --layer-name arn:aws:lambda:<region>:131329294410:layer:r-runtime-<r-version> \
+    --query 'LayerVersions[0].LayerVersionArn' --output text)
 ```
 
 ### r-recommended
@@ -167,9 +167,9 @@ Available R versions:
 
 Latest ARN:
 ```bash
-$(aws lambda list-layer-versions \
-    --layer-name arn:aws:lambda:${region}:131329294410:layer:r-recommended-${r_version} \
-    --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
+$(aws lambda list-layer-versions --max-items 1 --no-paginate  \
+    --layer-name arn:aws:lambda:<region>:131329294410:layer:r-recommended-<r-version> \
+    --query 'LayerVersions[0].LayerVersionArn' --output text)
 ```
 
 ### r-awspack
@@ -201,9 +201,9 @@ Available R versions:
 
 Latest ARN:
 ```bash
-$(aws lambda list-layer-versions \
-    --layer-name arn:aws:lambda:${region}:131329294410:layer:r-awspack-${r_version} \
-    --max-items 1 | jq -r '.LayerVersions[0].LayerVersionArn')
+$(aws lambda list-layer-versions --max-items 1 --no-paginate  \
+    --layer-name arn:aws:lambda:<region>:131329294410:layer:r-awspack-<r-version> \
+    --query 'LayerVersions[0].LayerVersionArn' --output text)
 ```
 
 ## Documentation
@@ -219,7 +219,7 @@ In order to install additional R packages, you can create a lambda layer contain
 You must use the the compiled package files.
 The easiest way is to install the package with `install.packages()` and copy the resulting folder in `$R_LIBS`.
 Using only the package sources does not suffice.
-The file structure must be `R/library/<MY_LIBRARY>`.
+The file structure must be `R/library/<my-library>`.
 See `awspack/compile.sh` for an example.
 If your package requires system libraries, place them in `R/lib/`.
 
@@ -234,14 +234,27 @@ This must be considered when writing to the local disk.
 ## Building
 
 To build the layer yourself, you need to first build R from source.
+
+We provide a script which launches an EC2 instance, compiles R, and uploads the zipped distribution to S3.
+You need to specify the R version, e.g., `3.6.0`, as well as the S3 bucket to upload the distribution to.
+Finally, you need to create an EC2 instance profile which is capable of uploading to the S3 bucket.
+See the [AWS documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html#create-iam-role) for details.
+With everything prepared, you can run the script:
+```bash
+./remote_compile_and_deploy.sh <version> <bucket-name> <instance-profile>
+```
+The script will also take care of terminating the launched EC2 instance.
+
+To manually build R from source, follow these steps:
+
 Start an EC2 instance which uses the [Lambda AMI](https://console.aws.amazon.com/ec2/v2/home#Images:visibility=public-images;search=amzn-ami-hvm-2017.03.1.20170812-x86_64-gp2):
 ```bash
-aws ec2 run-instances --image-id ami-657bd20a --count 1 --instance-type t2.medium --key-name <MyKeyPair>
+aws ec2 run-instances --image-id ami-657bd20a --count 1 --instance-type t2.medium --key-name <my-key-pair>
 ```
-Now run the `r/compile.sh` script.
+Now run the `compile.sh` script in `r/`.
 You must pass the R version as a parameter to the script, e.g., `3.6.0`.
 The script produces a zip containing a functional R installation in `/opt/R/`.
-The zipped distirbution can be found in `r/build/dist/R-3.6.0.zip`
+The zipped distribution can be found in `r/build/dist/R-3.6.0.zip`
 Use this R distribution in the following.
 
 With a compiled R distribution, you can build the different layers.
