@@ -14,8 +14,9 @@ class TestAWSLayer(unittest.TestCase):
     def test_s3_get_object(self):
         lambda_client = self.lambda_server.get_client()
         response = lambda_client.invoke(FunctionName="AWSFunction")
-        payload = response['Payload'].read().decode('utf-8')
-        result = json.loads(payload)['result']
+        raw_payload = response['Payload'].read().decode('utf-8')
+        json_payload = json.loads(raw_payload)
+        result = json_payload['result']
         self.assertEqual(len(result), 1)
         self.assertDictEqual(result[0], {
             "DRG.Definition": "039 - EXTRACRANIAL PROCEDURES W/O CC/MCC",

@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+awscli = ">=1.16.164"
+
+[dev-packages]
+aws-sam-cli = ">=0.16.1"
+
+[requires]
+python_version = "3.7"

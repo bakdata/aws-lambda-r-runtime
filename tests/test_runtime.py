@@ -14,8 +14,9 @@ class TestRuntimeLayer(unittest.TestCase):
     def test_script(self):
         lambda_client = self.lambda_server.get_client()
         response = lambda_client.invoke(FunctionName="ExampleFunction", Payload=json.dumps({'x': 1}))
-        payload = response['Payload'].read().decode('utf-8')
-        result = json.loads(payload)['result']
+        raw_payload = response['Payload'].read().decode('utf-8')
+        json_payload = json.loads(raw_payload)
+        result = json_payload['result']
         self.assertEqual(result, 2)
 
     @classmethod
