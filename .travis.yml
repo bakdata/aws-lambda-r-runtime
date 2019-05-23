@@ -15,15 +15,13 @@ matrix:
       env: R_VERSION=3.5.3
     - name: R 3.6.0
       env: R_VERSION=3.6.0
-before_install:
-  - pip3 install awscli
-  - pip3 install aws-sam-cli
-install: true
+install:
+  - PIPENV_VERBOSITY=-1 pipenv install --dev
 script:
-  - "./build.sh $R_VERSION aws-lambda-r-runtime && LOGLEVEL=INFO python3 -m unittest"
+  - ./build.sh $R_VERSION aws-lambda-r-runtime && LOGLEVEL=INFO pipenv run python3 -m unittest
 deploy:
   - provider: script
-    script: bash deploy.sh $R_VERSION
+    script: ./deploy.sh $R_VERSION
     skip_cleanup: true
     on:
       branch: master
