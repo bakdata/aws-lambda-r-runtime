@@ -15,8 +15,6 @@ matrix:
       env: R_VERSION=3.5.3
     - name: R 3.6.0
       env: R_VERSION=3.6.0
-before_install:
-  - pip3 install pipenv
 install:
   - pipenv install --dev
 script:
