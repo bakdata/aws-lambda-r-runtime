@@ -118,9 +118,9 @@ Available R versions:
 
 Latest ARN: 
 ```bash
-$(aws lambda list-layer-versions --max-items 1 --no-paginate  \
+aws lambda list-layer-versions --max-items 1 --no-paginate  \
     --layer-name arn:aws:lambda:${region}:131329294410:layer:r-runtime-${r_version} \
-    --query 'LayerVersions[0].LayerVersionArn' --output text)
+    --query 'LayerVersions[0].LayerVersionArn' --output text
 ```
 
 ### r-recommended
@@ -167,9 +167,9 @@ Available R versions:
 
 Latest ARN:
 ```bash
-$(aws lambda list-layer-versions --max-items 1 --no-paginate  \
+aws lambda list-layer-versions --max-items 1 --no-paginate  \
     --layer-name arn:aws:lambda:${region}:131329294410:layer:r-recommended-${r_version} \
-    --query 'LayerVersions[0].LayerVersionArn' --output text)
+    --query 'LayerVersions[0].LayerVersionArn' --output text
 ```
 
 ### r-awspack
@@ -201,9 +201,9 @@ Available R versions:
 
 Latest ARN:
 ```bash
-$(aws lambda list-layer-versions --max-items 1 --no-paginate  \
+aws lambda list-layer-versions --max-items 1 --no-paginate  \
     --layer-name arn:aws:lambda:${region}:131329294410:layer:r-awspack-${r_version} \
-    --query 'LayerVersions[0].LayerVersionArn' --output text)
+    --query 'LayerVersions[0].LayerVersionArn' --output text
 ```
 
 ## Documentation
