@@ -1,30 +1,84 @@
-library(httr)
-library(jsonlite)
-library(logging)
-
 to_str <- function(x) {
-  return(paste(capture.output(print(x)), collapse = "\n"))
+    return(paste(capture.output(print(x)), collapse = "\n"))
 }
 
-HANDLER <- Sys.getenv("_HANDLER")
-AWS_LAMBDA_RUNTIME_API <- Sys.getenv("AWS_LAMBDA_RUNTIME_API")
-args = commandArgs(trailingOnly = TRUE)
-EVENT_DATA <- args[1]
-REQUEST_ID <- args[2]
+error_to_payload <- function(error) {
+    return(list(errorMessage = toString(error), errorType = class(error)[1]))
+}
 
-HANDLER_split <- strsplit(HANDLER, ".", fixed = TRUE)[[1]]
-file_name <- paste0(HANDLER_split[1], ".R")
-function_name <- HANDLER_split[2]
-loginfo("Sourcing '%s'", file_name)
-source(file_name)
-params <- fromJSON(EVENT_DATA)
-loginfo("Invoking function '%s' with parameters: %s", function_name, to_str(params))
-result <- do.call(function_name, params)
-loginfo("Function returned: %s", to_str(result))
-url <- paste0("http://",
-              AWS_LAMBDA_RUNTIME_API,
-              "/2018-06-01/runtime/invocation/",
-              REQUEST_ID,
-              "/response")
-res <- POST(url, body = list(result = result), encode = "json")
-loginfo("Posted result: %s", to_str(res))
+post_error <- function(error, url) {
+    logerror(error)
+    POST(url,
+         add_headers("Lambda-Runtime-Function-Error-Type" = "Unhandled"),
+         body = error_to_payload(error),
+         encode = "json")
+    loginfo("Posted result: %s", to_str(res))
+}
+
+get_source_file_name <- function(file_base_name) {
+    file_name <- paste0(file_base_name, ".R")
+    if (! file.exists(file_name)) {
+        file_name <- paste0(file_base_name, ".r")
+    }
+    if (! file.exists(file_name)) {
+        stop(paste0('Source file does not exist: ', file_base_name, '.[R|r]'))
+    }
+    return(file_name)
+}
+
+invoke_lambda <- function(EVENT_DATA, function_name) {
+    params <- fromJSON(EVENT_DATA)
+    loginfo("Invoking function '%s' with parameters: %s", function_name, to_str(params))
+    result <- do.call(function_name, params)
+    loginfo("Function returned: %s", to_str(result))
+    return(result)
+}
+
+initializeRuntime <- function() {
+    library(httr)
+    library(jsonlite)
+    library(logging)
+
+    HANDLER <- Sys.getenv("_HANDLER")
+    HANDLER_split <- strsplit(HANDLER, ".", fixed = TRUE)[[1]]
+    file_base_name <- HANDLER_split[1]
+    file_name <- get_source_file_name(file_base_name)
+    loginfo("Sourcing '%s'", file_name)
+    source(file_name)
+    return(HANDLER_split[2])
+}
+
+AWS_LAMBDA_RUNTIME_API <- Sys.getenv("AWS_LAMBDA_RUNTIME_API")
+API_ENDPOINT <- paste0("http://", AWS_LAMBDA_RUNTIME_API, "/2018-06-01/runtime/")
+
+throwInitError <- function(error) {
+    url <- paste0(API_ENDPOINT, "init/error")
+    post_error(error, url)
+    stop()
+}
+
+throwRuntimeError <- function(error, REQUEST_ID) {
+    url <- paste0(API_ENDPOINT, "invocation/", REQUEST_ID, "/error")
+    post_error(error, url)
+}
+
+handle_request <- function(function_name) {
+    event_url <- paste0(API_ENDPOINT, "invocation/next")
+    event_response <- GET(event_url)
+    REQUEST_ID <- event_response$headers$`Lambda-Runtime-Aws-Request-Id`
+    tryCatch({
+        EVENT_DATA <- rawToChar(event_response$content)
+        result <- invoke_lambda(EVENT_DATA, function_name)
+        url <- paste0(API_ENDPOINT, "invocation/", REQUEST_ID, "/response")
+        res <- POST(url, body = list(result = result), encode = "json")
+        loginfo("Posted result: %s", to_str(res))
+    },
+    error = function(error) {
+        throwRuntimeError(error, REQUEST_ID)
+    })
+}
+
+tryCatch({
+    function_name <- initializeRuntime()
+    handle_request(function_name)
+}, error = throwInitError)

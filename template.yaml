@@ -13,32 +13,54 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: script.handler
+  LowerCaseExtensionFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: lowercase.handler
+  MissingFunctionFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: script.handler_missing
+  MissingSourceFileFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: missing.handler
+  MultipleArgumentsFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: script.handler_with_multiple_arguments
+  VariableArgumentsFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: script.handler_with_variable_arguments
   MatrixFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: matrix.handler
       Layers:
-        - !Ref RuntimeLayer
         - !Ref RecommendedLayer
+  MissingLibraryFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: matrix.handler
   AWSFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: aws.handler
       Layers:
-        - !Ref RuntimeLayer
         - !Ref AWSLayer
   RuntimeLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: runtime
+      LayerName: r-runtime
       ContentUri: runtime/build/layer/
   RecommendedLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: runtime
+      LayerName: r-recommended
       ContentUri: recommended/build/layer/
   AWSLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: runtime
+      LayerName: r-awspack
       ContentUri: awspack/build/layer/
