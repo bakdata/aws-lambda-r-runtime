@@ -8,10 +8,10 @@ error_to_payload <- function(error) {
 
 post_error <- function(error, url) {
     logerror(error)
-    POST(url,
-         add_headers("Lambda-Runtime-Function-Error-Type" = "Unhandled"),
-         body = error_to_payload(error),
-         encode = "json")
+    res <- POST(url,
+                add_headers("Lambda-Runtime-Function-Error-Type" = "Unhandled"),
+                body = error_to_payload(error),
+                encode = "json")
     loginfo("Posted result: %s", to_str(res))
 }
 
@@ -62,6 +62,12 @@ throwRuntimeError <- function(error, REQUEST_ID) {
     post_error(error, url)
 }
 
+postResult <- function(result, REQUEST_ID) {
+    url <- paste0(API_ENDPOINT, "invocation/", REQUEST_ID, "/response")
+    res <- POST(url, body = list(result = result), encode = "json")
+    loginfo("Posted result: %s", to_str(res))
+}
+
 handle_request <- function(function_name) {
     event_url <- paste0(API_ENDPOINT, "invocation/next")
     event_response <- GET(event_url)
@@ -69,9 +75,7 @@ handle_request <- function(function_name) {
     tryCatch({
         EVENT_DATA <- rawToChar(event_response$content)
         result <- invoke_lambda(EVENT_DATA, function_name)
-        url <- paste0(API_ENDPOINT, "invocation/", REQUEST_ID, "/response")
-        res <- POST(url, body = list(result = result), encode = "json")
-        loginfo("Posted result: %s", to_str(res))
+        postResult(result, REQUEST_ID)
     },
     error = function(error) {
         throwRuntimeError(error, REQUEST_ID)
@@ -80,5 +84,7 @@ handle_request <- function(function_name) {
 
 tryCatch({
     function_name <- initializeRuntime()
-    handle_request(function_name)
+    while (TRUE) {
+        handle_request(function_name)
+    }
 }, error = throwInitError)

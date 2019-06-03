@@ -2,7 +2,4 @@
 
 set -euo pipefail
 
-while true
-do
-  /opt/R/bin/Rscript /opt/runtime.R
-done
+/opt/R/bin/Rscript /opt/runtime.R
