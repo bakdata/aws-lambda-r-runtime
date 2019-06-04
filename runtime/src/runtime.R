@@ -81,10 +81,3 @@ handle_request <- function(function_name) {
         throwRuntimeError(error, REQUEST_ID)
     })
 }
-
-tryCatch({
-    function_name <- initializeRuntime()
-    while (TRUE) {
-        handle_request(function_name)
-    }
-}, error = throwInitError)

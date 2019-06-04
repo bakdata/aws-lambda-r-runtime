@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-/opt/R/bin/Rscript /opt/runtime.R
+/opt/R/bin/Rscript /opt/bootstrap.R

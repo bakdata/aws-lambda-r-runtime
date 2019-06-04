@@ -25,7 +25,7 @@ for package in "${recommended[@]}"
 do
    rm -r R/library/${package}/
 done
-chmod -R 755 bootstrap runtime.R R/
-zip -r -q runtime.zip runtime.R bootstrap R/
+chmod -R 755 .
+zip -r -q runtime.zip .
 mkdir -p ${BUILD_DIR}/dist/
 mv runtime.zip ${BUILD_DIR}/dist/
