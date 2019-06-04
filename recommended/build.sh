@@ -19,7 +19,7 @@ cd ${BUILD_DIR}/layer/
 unzip -q ${BASE_DIR}/../r/build/dist/R-${VERSION}.zip -d R.orig/
 mkdir -p R/library
 
-recommended=(boot class cluster codetools foreign KernSmooth lattice MASS Matrix mgcv nlme nnet rpart spatial survival)
+recommended=(boot class cluster foreign KernSmooth lattice MASS Matrix mgcv nlme nnet rpart spatial survival)
 for package in "${recommended[@]}"
 do
    mv R.orig/library/${package}/ R/library/${package}/
