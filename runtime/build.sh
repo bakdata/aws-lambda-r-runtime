@@ -20,7 +20,7 @@ cd ${BUILD_DIR}/layer/
 unzip -q ${BASE_DIR}/../r/build/dist/R-${VERSION}.zip -d R/
 rm -r R/doc/manual/
 #remove some libraries to save space
-recommended=(boot class cluster codetools foreign KernSmooth lattice MASS Matrix mgcv nlme nnet rpart spatial survival)
+recommended=(boot class cluster foreign KernSmooth lattice MASS Matrix mgcv nlme nnet rpart spatial survival)
 for package in "${recommended[@]}"
 do
    rm -r R/library/${package}/
