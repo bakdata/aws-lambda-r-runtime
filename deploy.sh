@@ -15,17 +15,23 @@ function releaseToRegion {
     region=$2
     layer=$3
     bucket="aws-lambda-r-runtime.$region"
-    resource="R-$version/$layer.zip"
+    resource="R-$version/$layer-$version.zip"
     layer_name="r-$layer-$version"
     layer_name="${layer_name//\./_}"
     echo "publishing layer $layer_name to region $region"
     aws s3 cp ${layer}/build/dist/${layer}.zip s3://${bucket}/${resource} --region ${region}
-    response=$(aws lambda publish-layer-version --layer-name ${layer_name} \
-        --content S3Bucket=${bucket},S3Key=${resource} --license-info MIT --region ${region})
+    response=$(aws lambda publish-layer-version \
+        --layer-name ${layer_name} \
+        --content S3Bucket=${bucket},S3Key=${resource} \
+        --license-info MIT \
+        --region ${region})
     version_number=$(jq -r '.Version' <<< "$response")
-    aws lambda add-layer-version-permission --layer-name ${layer_name} \
-        --version-number ${version_number} --principal "*" \
-        --statement-id publish --action lambda:GetLayerVersion \
+    aws lambda add-layer-version-permission \
+        --layer-name ${layer_name} \
+        --version-number ${version_number} \
+        --principal "*" \
+        --statement-id publish \
+        --action lambda:GetLayerVersion \
         --region ${region}
     layer_arn=$(jq -r '.LayerVersionArn' <<< "$response")
     echo "published layer $layer_arn"

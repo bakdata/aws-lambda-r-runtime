@@ -18,5 +18,9 @@ else
     BUCKET=$2
 fi
 
-./compile.sh
-aws s3 cp build/dist/awspack.zip s3://${BUCKET}/R-${VERSION}/
+BASE_DIR=$(pwd)
+BUILD_DIR=${BASE_DIR}/build/
+
+rm -rf ${BUILD_DIR}
+aws s3 cp s3://${BUCKET}/R-${VERSION}/awspack.zip ${BUILD_DIR}/dist/
+unzip -q ${BUILD_DIR}/dist/awspack.zip -d ${BUILD_DIR}/layer/

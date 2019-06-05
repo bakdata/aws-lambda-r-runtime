@@ -10,12 +10,15 @@ else
     VERSION=$1
 fi
 
+if [[ -z ${2+x} ]];
+then
+    echo 'bucket name required'
+    exit 1
+else
+    BUCKET=$2
+fi
+
 BASE_DIR=$(pwd)
 BUILD_DIR=${BASE_DIR}/build/
-R_DIR=/opt/R/
 
-rm -rf ${BUILD_DIR}
-
-mkdir -p ${BUILD_DIR}/bin/
-docker run -v ${BUILD_DIR}/bin/:/var/r lambda-r:${VERSION}
-sudo chown -R $(whoami):$(whoami) ${BUILD_DIR}/bin/
+aws s3 cp ${BUILD_DIR}/dist/awspack.zip s3://${BUCKET}/R-${VERSION}/

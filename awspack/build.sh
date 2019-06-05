@@ -10,17 +10,18 @@ else
     VERSION=$1
 fi
 
-if [[ -z ${2+x} ]];
-then
-    echo 'bucket name required'
-    exit 1
-else
-    BUCKET=$2
-fi
-
 BASE_DIR=$(pwd)
 BUILD_DIR=${BASE_DIR}/build/
+R_DIR=/opt/R/
 
 rm -rf ${BUILD_DIR}
-aws s3 cp s3://${BUCKET}/R-${VERSION}/awspack.zip ${BUILD_DIR}/dist/
-unzip -q ${BUILD_DIR}/dist/awspack.zip -d ${BUILD_DIR}/layer/
+
+mkdir -p ${BUILD_DIR}/layer/
+docker run -v ${BUILD_DIR}/layer/:/var/awspack -v ${BASE_DIR}/entrypoint.sh:/entrypoint.sh \
+    lambda-r:${VERSION} /entrypoint.sh
+sudo chown -R $(whoami):$(whoami) ${BUILD_DIR}/layer/
+cd ${BUILD_DIR}/layer/
+chmod -R 755 .
+zip -r awspack-${VERSION}.zip .
+mkdir -p ${BUILD_DIR}/dist/
+mv awspack-${VERSION}.zip ${BUILD_DIR}/dist/

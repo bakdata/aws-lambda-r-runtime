@@ -18,5 +18,11 @@ else
     BUCKET=$2
 fi
 
-./compile.sh ${VERSION}
+BASE_DIR=$(pwd)
+BUILD_DIR=${BASE_DIR}/build/
+
+cd ${BUILD_DIR}/bin/
+zip -r R-${VERSION}.zip .
+mkdir -p ${BUILD_DIR}/dist/
+mv R-${VERSION}.zip ${BUILD_DIR}/dist/
 aws s3 cp build/dist/R-${VERSION}.zip s3://${BUCKET}/R-${VERSION}/
