@@ -32,9 +32,15 @@ instance_id=$(aws ec2 run-instances --image-id ami-657bd20a --count 1 --instance
 yum install -y git
 git clone https://github.com/bakdata/aws-lambda-r-runtime.git
 cd aws-lambda-r-runtime/r/
-./compile_and_deploy.sh '"$VERSION $BUCKET"'
-cd ../awspack/
-./compile_and_deploy.sh '"$VERSION $BUCKET"'
+./compile.sh '"$VERSION"'
+cd build/bin/
+zip -r R-'"$VERSION"'.zip .
+aws s3 cp R-'"$VERSION"'.zip s3://'"$BUCKET"'/R-'"$VERSION"'/
+cd ../../../awspack/
+./compile_and_deploy.sh '"$VERSION"'
+cd build/bin/
+zip -r awspack-'"$VERSION"'.zip .
+aws s3 cp awspack-'"$VERSION"'.zip s3://'"$BUCKET"'/R-'"$VERSION"'/
 shutdown -h now' \
     --query 'Instances[0].InstanceId' --output text)
 
