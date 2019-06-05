@@ -234,8 +234,18 @@ This must be considered when writing to the local disk.
 ## Building
 
 To build the layer yourself, you need to first build R from source.
+We provide a Docker image which uses the great [docker-lambda](https://github.com/lambci/docker-lambda) project.
+Just run `./build.sh <version>` and everything should be build properly.
 
-We provide a script which launches an EC2 instance, compiles R, and uploads the zipped distribution to S3.
+If you plan to publish the runtime, you need to have a recent version of aws cli (>=1.16).
+Now run the `<layer>/deploy.sh` script.
+This creates a lambda layer named `r-<layer>-<version>` in your AWS account.
+You can use it as shown in the example.
+
+### Compiling on EC2
+
+In case the Docker image does not properly represent the lambda environment,
+we also provide a script which launches an EC2 instance, compiles R, and uploads the zipped distribution to S3.
 You need to specify the R version, e.g., `3.6.0`, as well as the S3 bucket to upload the distribution to.
 Finally, you need to create an EC2 instance profile which is capable of uploading to the S3 bucket.
 See the [AWS documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html#create-iam-role) for details.
@@ -254,18 +264,12 @@ aws ec2 run-instances --image-id ami-657bd20a --count 1 --instance-type t2.mediu
 Now run the `compile.sh` script in `r/`.
 You must pass the R version as a parameter to the script, e.g., `3.6.0`.
 The script produces a zip containing a functional R installation in `/opt/R/`.
-The zipped distribution can be found in `r/build/dist/R-3.6.0.zip`
-Use this R distribution in the following.
-
-With a compiled R distribution, you can build the different layers.
-If you plan to publish the runtime, you need to have a recent version of aws cli (>=1.16).
-Now run the `<layer>/build_and_deploy.sh` script.
-This creates a lambda layer named `r-<layer>` in your AWS account.
-You can use it as shown in the example.
+The relevant files can be found in `r/build/bin/`.
+Use this R distribution for building the layers.
 
 ### Testing
 
-After building all layers, you can test it locally with SAM CLI.
-Install it via `pip install --user aws-sam-cli`.
+After building all layers, you can test it locally with SAM CLI and Docker.
+Install it via `pipenv install --dev`.
 Then run `python3 -m unittest`.
-This will spawn a local lambda server via docker and invokes the lambdas defined in `template.yaml`.
+This will spawn a local lambda server via Docker and invokes the lambdas defined in `template.yaml`.

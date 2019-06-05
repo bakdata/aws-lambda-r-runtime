@@ -11,4 +11,6 @@ else
 fi
 
 ./build.sh ${VERSION}
-aws lambda publish-layer-version --layer-name r-recommended --zip-file fileb://build/dist/recommended-${VERSION}.zip
+aws lambda publish-layer-version \
+    --layer-name r-runtime-${VERSION} \
+    --zip-file fileb://build/dist/runtime-${VERSION}.zip

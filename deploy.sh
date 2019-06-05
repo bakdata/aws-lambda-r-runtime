@@ -19,7 +19,7 @@ function releaseToRegion {
     layer_name="r-$layer-$version"
     layer_name="${layer_name//\./_}"
     echo "publishing layer $layer_name to region $region"
-    aws s3 cp ${layer}/build/dist/${layer}.zip s3://${bucket}/${resource} --region ${region}
+    aws s3 cp ${layer}/build/dist/${layer}-${version}.zip s3://${bucket}/${resource} --region ${region}
     response=$(aws lambda publish-layer-version \
         --layer-name ${layer_name} \
         --content S3Bucket=${bucket},S3Key=${resource} \
