@@ -40,7 +40,7 @@ cat response.txt
 
 The expected result should look similar to this:
 ```json
-{"result":2}
+2
 ```
 
 ### Using packages
@@ -77,7 +77,7 @@ cat response.txt
 
 The expected result should look similar to this:
 ```json
-{"result":[4,5,6]}
+[4,5,6]
 ```
 
 ## Provided layers

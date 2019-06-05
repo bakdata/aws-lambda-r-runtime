@@ -3,7 +3,6 @@ Transform: 'AWS::Serverless-2016-10-31'
 Globals:
   Function:
     Runtime: provided
-    CodeUri: tests/R/
     Timeout: 300
     MemorySize: 3008
     Layers:
@@ -13,42 +12,72 @@ Resources:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: script.handler
+      CodeUri: tests/R/
+      FunctionName: ExampleFunction
   LowerCaseExtensionFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: lowercase.handler
+      CodeUri: tests/R/
+      FunctionName: LowerCaseExtensionFunction
   MissingFunctionFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: script.handler_missing
+      CodeUri: tests/R/
+      FunctionName: MissingFunctionFunction
   MissingSourceFileFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: missing.handler
+      CodeUri: tests/R/
+      FunctionName: MissingSourceFileFunction
   MultipleArgumentsFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: script.handler_with_multiple_arguments
+      CodeUri: tests/R/
+      FunctionName: MultipleArgumentsFunction
   VariableArgumentsFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: script.handler_with_variable_arguments
+      CodeUri: tests/R/
+      FunctionName: VariableArgumentsFunction
   MatrixFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: matrix.handler
+      CodeUri: tests/R/
       Layers:
         - !Ref RecommendedLayer
+      FunctionName: MatrixFunction
   MissingLibraryFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: matrix.handler
+      CodeUri: tests/R/
+      FunctionName: MissingLibraryFunction
   AWSFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       Handler: aws.handler
+      CodeUri: tests/R/
       Layers:
         - !Ref AWSLayer
+      FunctionName: AWSFunction
+  ApiFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: api.handler
+      CodeUri: tests/R/
+      FunctionName: ApiFunction
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: '/hello'
+            Method: GET
   RuntimeLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
