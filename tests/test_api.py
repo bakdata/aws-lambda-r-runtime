@@ -13,7 +13,7 @@ class TestApi(unittest.TestCase):
         cls.api = start_local_api()
 
     def test_matrix(self):
-        response = requests.get('http://127.0.01:3000/hello', params={'who': 'World'})
+        response = requests.get('%s/hello' % self.api.get_uri(), params={'who': 'World'})
         result = response.json()
         self.assertDictEqual({'hello': 'World'}, result)
 

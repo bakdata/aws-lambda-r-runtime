@@ -22,6 +22,9 @@ class LocalApi:
     def wait(self, interval: int = 10, retries: int = 6):
         wait_for_port(self.port, self.host, interval=interval, retries=retries)
 
+    def get_uri(self) -> str:
+        return 'http://{}:{}'.format(self.host, self.port)
+
 
 def start_local_api() -> LocalApi:
     server = LocalApi()
