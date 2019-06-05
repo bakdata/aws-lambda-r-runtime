@@ -17,5 +17,5 @@ R_DIR=/opt/R/
 rm -rf ${BUILD_DIR}
 
 mkdir -p ${BUILD_DIR}/bin/
-docker run -v ${BUILD_DIR}/bin/:/var/r lambda-r:${VERSION}
+docker run -v ${BUILD_DIR}/bin/:/var/r lambda-r:build-${VERSION}
 sudo chown -R $(whoami):$(whoami) ${BUILD_DIR}/bin/

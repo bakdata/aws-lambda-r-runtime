@@ -18,7 +18,7 @@ rm -rf ${BUILD_DIR}
 
 mkdir -p ${BUILD_DIR}/layer/
 docker run -v ${BUILD_DIR}/layer/:/var/awspack -v ${BASE_DIR}/entrypoint.sh:/entrypoint.sh \
-    lambda-r:${VERSION} /entrypoint.sh
+    lambda-r:build-${VERSION} /entrypoint.sh
 sudo chown -R $(whoami):$(whoami) ${BUILD_DIR}/layer/
 cd ${BUILD_DIR}/layer/
 chmod -R 755 .

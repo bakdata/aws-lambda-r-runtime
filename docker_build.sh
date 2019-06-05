@@ -10,4 +10,4 @@ else
     VERSION=$1
 fi
 
-docker build -t lambda-r:${VERSION} --build-arg VERSION=${VERSION} .
+docker build -t lambda-r:build-${VERSION} --build-arg VERSION=${VERSION} .
