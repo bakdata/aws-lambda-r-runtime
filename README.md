@@ -40,7 +40,7 @@ cat response.txt
 
 The expected result should look similar to this:
 ```json
-{"result":2}
+2
 ```
 
 ### Using packages
@@ -77,7 +77,7 @@ cat response.txt
 
 The expected result should look similar to this:
 ```json
-{"result":[4,5,6]}
+[4,5,6]
 ```
 
 ## Provided layers
@@ -213,7 +213,7 @@ The handler must be separated by `.`, e.g., `script.handler`.
 
 The lambda payload is unwrapped as named arguments to the R function to call, e.g., `{"x":1}` is unwrapped to `handler(x=1)`.
 
-The lambda function returns whatever is returned by the R function as a JSON object with `result` as a root element.
+The lambda function returns whatever is returned by the R function as a JSON object.
 
 ### Building custom layers
 

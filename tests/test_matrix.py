@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from tests.aws_lambda import LocalLambdaServer, start_local_lambda
+from tests.sam import LocalLambdaServer, start_local_lambda
 
 
 class TestRecommendedLayer(unittest.TestCase):
@@ -15,8 +15,7 @@ class TestRecommendedLayer(unittest.TestCase):
         lambda_client = self.lambda_server.get_client()
         response = lambda_client.invoke(FunctionName="MatrixFunction")
         raw_payload = response['Payload'].read().decode('utf-8')
-        json_payload = json.loads(raw_payload)
-        result = json_payload['result']
+        result = json.loads(raw_payload)
         self.assertEqual(len(result), 3)
         self.assertIn(4, result)
         self.assertIn(5, result)

@@ -64,7 +64,7 @@ throwRuntimeError <- function(error, REQUEST_ID) {
 
 postResult <- function(result, REQUEST_ID) {
     url <- paste0(API_ENDPOINT, "invocation/", REQUEST_ID, "/response")
-    res <- POST(url, body = list(result = result), encode = "json")
+    res <- POST(url, body = toJSON(result, auto_unbox = TRUE), encode = "raw", content_type_json())
     loginfo("Posted result:\n%s", to_str(res))
 }
 
