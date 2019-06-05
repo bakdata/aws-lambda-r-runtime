@@ -79,7 +79,7 @@ class TestRuntimeLayer(unittest.TestCase):
         self.assertIn('unused argument (y = 1)', json_payload['errorMessage'])
         self.assertEqual(json_payload['errorType'], 'simpleError')
 
-    # @unittest.skip('Lambda local does not pass errors properly')
+    @unittest.skip('Lambda local does not pass errors properly')
     def test_long_argument(self):
         lambda_client = self.get_client()
         payload = {x: x for x in range(0, 100000)}
