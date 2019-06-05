@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from tests.aws_lambda import LocalLambdaServer, start_local_lambda
+from tests.sam import LocalLambdaServer, start_local_lambda
 
 
 class TestAWSLayer(unittest.TestCase):
