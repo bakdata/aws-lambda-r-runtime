@@ -10,5 +10,4 @@ else
     VERSION=$1
 fi
 
-./build.sh ${VERSION}
-aws lambda publish-layer-version --layer-name r-runtime --zip-file fileb://build/dist/runtime.zip
+docker build -t lambda-r:build-${VERSION} --build-arg VERSION=${VERSION} .

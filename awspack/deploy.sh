@@ -11,4 +11,6 @@ else
 fi
 
 ./build.sh ${VERSION}
-aws lambda publish-layer-version --layer-name r-awspack --zip-file fileb://build/dist/awspack.zip
+aws lambda publish-layer-version \
+    --layer-name r-awspack-${VERSION} \
+    --zip-file fileb://build/dist/awspack-${VERSION}.zip

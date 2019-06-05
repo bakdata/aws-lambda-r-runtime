@@ -14,9 +14,9 @@ BASE_DIR=$(pwd)
 BUILD_DIR=${BASE_DIR}/build/
 
 rm -rf ${BUILD_DIR}
-mkdir -p ${BUILD_DIR}/layer/
+mkdir -p ${BUILD_DIR}/layer/R.orig/
 cd ${BUILD_DIR}/layer/
-unzip -q ${BASE_DIR}/../r/build/dist/R-${VERSION}.zip -d R.orig/
+cp -r ${BASE_DIR}/../r/build/bin/* R.orig/
 mkdir -p R/library
 
 recommended=(boot class cluster codetools foreign KernSmooth lattice MASS Matrix mgcv nlme nnet rpart spatial survival)
@@ -26,6 +26,6 @@ do
 done
 rm -rf R.orig/
 chmod -R 755 R/
-zip -r -q recommended.zip R/
+zip -r -q recommended-${VERSION}.zip R/
 mkdir -p ${BUILD_DIR}/dist/
-mv recommended.zip ${BUILD_DIR}/dist/
+mv recommended-${VERSION}.zip ${BUILD_DIR}/dist/
