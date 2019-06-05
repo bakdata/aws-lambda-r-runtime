@@ -215,13 +215,21 @@ The lambda payload is unwrapped as named arguments to the R function to call, e.
 
 The lambda function returns whatever is returned by the R function as a JSON object with `result` as a root element.
 
+### Building custom layers
+
 In order to install additional R packages, you can create a lambda layer containing the libraries, just as in the second example.
 You must use the the compiled package files.
 The easiest way is to install the package with `install.packages()` and copy the resulting folder in `$R_LIBS`.
 Using only the package sources does not suffice.
 The file structure must be `R/library/<my-library>`.
-See `awspack/compile.sh` for an example.
 If your package requires system libraries, place them in `R/lib/`.
+
+You can use Docker for building your layer.
+You need to run `./docker_build.sh` first.
+Then you can install your packages inside the container and copy the files to your machine.
+See `awspack/` for an example.
+The `build.sh` script is used to run the docker container and copy sources to your machine.
+The `entrypoint.sh` script is used for installing packages inside the container.
 
 ## Limitations
 
