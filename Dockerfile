@@ -1,19 +1,16 @@
 FROM lambci/lambda:build-provided
 
-ARG VERSION=3.6.0
-ARG R_DIR=/opt/R/
-
-RUN yum install -y wget readline-devel \
+RUN yum install -q -y wget readline-devel \
     xorg-x11-server-devel libX11-devel libXt-devel \
     curl-devel \
     gcc-c++ gcc-gfortran \
     zlib-devel bzip2 bzip2-libs \
     openssl-devel libxml2-devel
-# workaround for making R build work
-# issue seems similar to https://stackoverflow.com/questions/40639138/configure-error-installing-r-3-3-2-on-ubuntu-checking-whether-bzip2-support-suf
-RUN yum install -y R
 
-RUN wget https://cran.r-project.org/src/base/R-3/R-${VERSION}.tar.gz && \
+ARG VERSION=3.6.0
+ARG R_DIR=/opt/R/
+
+RUN wget -q https://cran.r-project.org/src/base/R-3/R-${VERSION}.tar.gz && \
     mkdir ${R_DIR} && \
     tar -xf R-${VERSION}.tar.gz && \
     mv R-${VERSION}/* ${R_DIR} && \

@@ -22,6 +22,6 @@ docker run -v ${BUILD_DIR}/layer/:/var/awspack -v ${BASE_DIR}/entrypoint.sh:/ent
 sudo chown -R $(whoami):$(whoami) ${BUILD_DIR}/layer/
 cd ${BUILD_DIR}/layer/
 chmod -R 755 .
-zip -r awspack-${VERSION}.zip .
+zip -r -q awspack-${VERSION}.zip .
 mkdir -p ${BUILD_DIR}/dist/
 mv awspack-${VERSION}.zip ${BUILD_DIR}/dist/
