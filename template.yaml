@@ -26,6 +26,12 @@ Resources:
       Handler: script.handler_missing
       CodeUri: tests/R/
       FunctionName: MissingFunctionFunction
+  HandlerAsVariableFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: script.handler_as_variable
+      CodeUri: tests/R/
+      FunctionName: HandlerAsVariableFunction
   MissingSourceFileFunction:
     Type: 'AWS::Serverless::Function'
     Properties:

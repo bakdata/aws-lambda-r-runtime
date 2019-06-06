@@ -45,7 +45,11 @@ initializeRuntime <- function() {
     file_name <- get_source_file_name(file_base_name)
     loginfo("Sourcing '%s'", file_name)
     source(file_name)
-    return(HANDLER_split[2])
+    function_name <- HANDLER_split[2]
+    if (!exists(function_name, mode = "function")) {
+        stop(paste0("Function \"", function_name, "\" does not exist"))
+    }
+    return(function_name)
 }
 
 AWS_LAMBDA_RUNTIME_API <- Sys.getenv("AWS_LAMBDA_RUNTIME_API")

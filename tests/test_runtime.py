@@ -58,7 +58,16 @@ class TestRuntimeLayer(unittest.TestCase):
         response = lambda_client.invoke(FunctionName="MissingFunctionFunction", Payload=json.dumps({'y': 1}))
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
-        self.assertIn('could not find function "handler_missing"', json_payload['errorMessage'])
+        self.assertIn('Function "handler_missing" does not exist', json_payload['errorMessage'])
+        self.assertEqual(json_payload['errorType'], 'simpleError')
+
+    @unittest.skip('Lambda local does not pass errors properly')
+    def test_function_as_variable(self):
+        lambda_client = self.get_client()
+        response = lambda_client.invoke(FunctionName="HandlerAsVariableFunction", Payload=json.dumps({'y': 1}))
+        raw_payload = response['Payload'].read().decode('utf-8')
+        json_payload = json.loads(raw_payload)
+        self.assertIn('Function "handler_as_variable" does not exist', json_payload['errorMessage'])
         self.assertEqual(json_payload['errorType'], 'simpleError')
 
     @unittest.skip('Lambda local does not pass errors properly')
