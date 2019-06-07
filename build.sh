@@ -15,8 +15,8 @@ BASE_DIR=$(pwd)
 cd ${BASE_DIR}/r
 ./build.sh ${VERSION}
 cd ${BASE_DIR}/runtime
-./build.sh ${VERSION}
+./build.sh
 cd ${BASE_DIR}/recommended
-./build.sh ${VERSION}
+./build.sh
 cd ${BASE_DIR}/awspack
 ./build.sh ${VERSION}

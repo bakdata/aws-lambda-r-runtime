@@ -10,7 +10,13 @@ else
     VERSION=$1
 fi
 
-./build.sh ${VERSION}
+BASE_DIR=$(pwd)
+BUILD_DIR=${BASE_DIR}/build/
+
+./build.sh
+zip -r -q recommended-${VERSION}.zip R/
+mkdir -p ${BUILD_DIR}/dist/
+mv recommended-${VERSION}.zip ${BUILD_DIR}/dist/
 aws lambda publish-layer-version \
     --layer-name r-recommended-${VERSION} \
     --zip-file fileb://build/dist/recommended-${VERSION}.zip

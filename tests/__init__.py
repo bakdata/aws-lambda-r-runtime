@@ -20,3 +20,11 @@ def wait_for_port(port: int, host: str = 'localhost', interval: int = 10, retrie
                          i, retries, host, port, e, interval)
             time.sleep(interval)
     return False
+
+
+def get_function_name(name: str, local: bool = True) -> str:
+    return name if local else '{0}-{1}'.format(name, get_version())
+
+
+def get_version() -> str:
+    return os.getenv('VERSION', '3_6_0')

@@ -2,14 +2,6 @@
 
 set -euo pipefail
 
-if [[ -z ${1+x} ]];
-then
-    echo 'version number required'
-    exit 1
-else
-    VERSION=$1
-fi
-
 BASE_DIR=$(pwd)
 BUILD_DIR=${BASE_DIR}/build/
 
@@ -26,6 +18,3 @@ do
    rm -r R/library/${package}/
 done
 chmod -R 755 .
-zip -r -q runtime-${VERSION}.zip .
-mkdir -p ${BUILD_DIR}/dist/
-mv runtime-${VERSION}.zip ${BUILD_DIR}/dist/

@@ -18,7 +18,7 @@ matrix:
 install:
   - PIPENV_VERBOSITY=-1 pipenv install --dev
 script:
-  - ./build.sh $R_VERSION && LOGLEVEL=INFO pipenv run python -m unittest
+  - ./build.sh $R_VERSION && LOGLEVEL=INFO VERSION=${R_VERSION//\./_} pipenv run python -m unittest
 deploy:
   - provider: script
     script: ./deploy.sh $R_VERSION

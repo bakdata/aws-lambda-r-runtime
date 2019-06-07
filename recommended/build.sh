@@ -2,14 +2,6 @@
 
 set -euo pipefail
 
-if [[ -z ${1+x} ]];
-then
-    echo 'version number required'
-    exit 1
-else
-    VERSION=$1
-fi
-
 BASE_DIR=$(pwd)
 BUILD_DIR=${BASE_DIR}/build/
 
@@ -26,6 +18,3 @@ do
 done
 rm -rf R.orig/
 chmod -R 755 R/
-zip -r -q recommended-${VERSION}.zip R/
-mkdir -p ${BUILD_DIR}/dist/
-mv recommended-${VERSION}.zip ${BUILD_DIR}/dist/
