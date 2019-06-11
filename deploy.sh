@@ -7,34 +7,13 @@ then
     echo 'version number required'
     exit 1
 else
-    R_VERSION=$1
+    VERSION=$1
 fi
-
-function integrationTest {
-    version=$1
-    region=$2
-    bucket=$3
-    echo "Integration testing in region $region"
-    sam package \
-        --output-template-file packaged.yaml \
-        --s3-bucket ${bucket} \
-        --template-file test-template.yaml
-    version_="${version//\./_}"
-    stack_name=r-${version//\./-}-test
-    sam deploy \
-        --template-file packaged.yaml \
-        --stack-name ${stack_name} \
-        --capabilities CAPABILITY_IAM \
-        --parameter-overrides Version=${version_} \
-        --no-fail-on-empty-changeset \
-        --region ${region}
-    VERSION=${version_} INTEGRATION_TEST=True pipenv run python -m unittest
-}
 
 function releaseToRegion {
     version=$1
     region=$2
-    bucket=$3
+    bucket="aws-lambda-r-runtime.$region"
     echo "publishing layers to region $region"
     sam package \
         --output-template-file packaged.yaml \
@@ -82,13 +61,8 @@ regions=(
           eu-west-1 eu-west-2 eu-west-3
           sa-east-1
         )
-integration_test=true
+
 for region in "${regions[@]}"
 do
-    bucket="aws-lambda-r-runtime.$region"
-    if [[ "$integration_test" = true ]] ; then
-        integrationTest ${R_VERSION} ${region} ${bucket}
-        integration_test=false
-    fi
-    releaseToRegion ${R_VERSION} ${region} ${bucket}
+    releaseToRegion ${VERSION} ${region}
 done
