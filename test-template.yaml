@@ -105,13 +105,3 @@ Resources:
       LayerName: !Sub r-awspack-${Version}-test
       ContentUri: awspack/build/layer/
       LicenseInfo: MIT
-Outputs:
-  runtime-layer:
-    Description: "Runtime layer ARN"
-    Value: !Ref RuntimeLayer
-  recommended-layer:
-    Description: "Recommended layer ARN"
-    Value: !Ref RecommendedLayer
-  awspack-layer:
-    Description: "AWS layer ARN"
-    Value: !Ref AWSLayer

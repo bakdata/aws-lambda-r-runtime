@@ -30,8 +30,9 @@ function releaseToRegion {
     do
         layer_arn=$(aws cloudformation describe-stacks \
                   --stack-name aws-lambda-r-demo \
-                  --query "Stacks[0].Outputs[?OutputKey=='AWSLayer'].OutputValue" \
-                  --output text)
+                  --query "Stacks[0].Outputs[?OutputKey=='$layer-layer'].OutputValue" \
+                  --output text \
+                  --region ${region})
         layer_name==${layer_arn%:*}
         version_number=${layer_arn##*:}
         aws lambda add-layer-version-permission \
