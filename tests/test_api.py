@@ -2,6 +2,7 @@ import unittest
 
 import requests
 
+from tests import get_version
 from tests.sam import LocalApi, start_local_api
 
 
@@ -10,7 +11,9 @@ class TestApi(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.api = start_local_api()
+        cls.api = start_local_api(template_path="test-template.yaml",
+                                  parameter_overrides={'Version': get_version()},
+                                  )
 
     def test_matrix(self):
         response = requests.get('%s/hello' % self.api.get_uri(), params={'who': 'World'})

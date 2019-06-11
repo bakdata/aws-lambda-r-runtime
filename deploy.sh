@@ -73,7 +73,7 @@ do
             --capabilities CAPABILITY_IAM \
             --parameter-overrides Version=${version_} \
             --region ${region}
-        VERSION=version_ pipenv run python -m unittest
+        VERSION=version_ INTEGRATION_TEST=True pipenv run python -m unittest
         integration_test=false
     fi
     releaseToRegion ${VERSION} ${region}

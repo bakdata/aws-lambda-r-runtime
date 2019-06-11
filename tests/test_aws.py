@@ -11,7 +11,7 @@ class TestAWSLayer(unittest.TestCase):
 
     @classmethod
     def isLocal(cls) -> bool:
-        return os.getenv('INTEGRATION_TEST') == 'True'
+        return os.getenv('INTEGRATION_TEST') != 'True'
 
     @classmethod
     def setUpClass(cls):
