@@ -17,13 +17,13 @@ function releaseToRegion {
     echo "publishing layers to region $region"
     sam package \
         --output-template-file packaged.yaml \
-        --s3-bucket ${bucket}
+        --s3-bucket ${bucket} \
+        --region ${region}
     version_="${version//\./_}"
     stack_name=r-${version//\./-}
     sam deploy \
         --template-file packaged.yaml \
         --stack-name ${stack_name} \
-        --capabilities CAPABILITY_IAM \
         --parameter-overrides Version=${version_} \
         --no-fail-on-empty-changeset \
         --region ${region}

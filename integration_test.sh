@@ -18,7 +18,8 @@ function integrationTest {
     sam package \
         --output-template-file packaged.yaml \
         --s3-bucket ${bucket} \
-        --template-file test-template.yaml
+        --template-file test-template.yaml \
+        --region ${region}
     version_="${version//\./_}"
     stack_name=r-${version//\./-}-test
     sam deploy \
@@ -28,7 +29,7 @@ function integrationTest {
         --parameter-overrides Version=${version_} \
         --no-fail-on-empty-changeset \
         --region ${region}
-    VERSION=${version_} INTEGRATION_TEST=True pipenv run python -m unittest
+    VERSION=${version_} INTEGRATION_TEST=True AWS_DEFAULT_REGION=${region} pipenv run python -m unittest
 }
 
 regions=(
