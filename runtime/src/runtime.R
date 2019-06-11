@@ -30,7 +30,7 @@ invoke_lambda <- function(EVENT_DATA, function_name) {
     params <- fromJSON(EVENT_DATA)
     loginfo("Invoking function '%s' with parameters:\n%s", function_name, to_str(params))
     result <- do.call(function_name, params)
-    loginfo("Function returned:\n%s", to_str(result))
+    logdebug("Function returned:\n%s", to_str(result))
     return(result)
 }
 
