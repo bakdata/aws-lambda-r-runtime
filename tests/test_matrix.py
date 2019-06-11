@@ -1,8 +1,9 @@
 import json
-import os
 import unittest
 
-from tests import get_version, get_function_name
+import boto3
+
+from tests import get_version, get_function_name, is_local
 from tests.sam import LocalLambdaServer, start_local_lambda
 
 
@@ -10,19 +11,18 @@ class TestRecommendedLayer(unittest.TestCase):
     lambda_server: LocalLambdaServer = None
 
     @classmethod
-    def isLocal(cls) -> bool:
-        return os.getenv('INTEGRATION_TEST') != 'True'
-
-    @classmethod
     def setUpClass(cls):
-        if cls.isLocal():
+        if is_local():
             cls.lambda_server = start_local_lambda(template_path="test-template.yaml",
                                                    parameter_overrides={'Version': get_version()},
                                                    )
 
+    def get_client(self):
+        return self.lambda_server.get_client() if is_local() else boto3.client('lambda')
+
     def test_matrix(self):
-        lambda_client = self.lambda_server.get_client()
-        response = lambda_client.invoke(FunctionName=get_function_name("MatrixFunction", self.isLocal()))
+        lambda_client = self.get_client()
+        response = lambda_client.invoke(FunctionName=get_function_name("MatrixFunction"))
         raw_payload = response['Payload'].read().decode('utf-8')
         result = json.loads(raw_payload)
         self.assertEqual(len(result), 3)
@@ -32,5 +32,5 @@ class TestRecommendedLayer(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        if cls.isLocal():
+        if is_local():
             cls.lambda_server.kill()

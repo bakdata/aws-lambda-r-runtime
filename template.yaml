@@ -30,12 +30,12 @@ Resources:
       ContentUri: awspack/build/layer/
       LicenseInfo: MIT
 Outputs:
-  runtime-layer:
+  runtimeLayer:
     Description: "Runtime layer ARN"
     Value: !Ref RuntimeLayer
-  recommended-layer:
+  recommendedLayer:
     Description: "Recommended layer ARN"
     Value: !Ref RecommendedLayer
-  awspack-layer:
+  awspackLayer:
     Description: "AWS layer ARN"
     Value: !Ref AWSLayer
