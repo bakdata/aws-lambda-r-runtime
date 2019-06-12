@@ -61,10 +61,24 @@ class TestRuntimeLayer(unittest.TestCase):
         result = json.loads(raw_payload)
         self.assertEqual(1, result)
         log = base64.b64decode(response['LogResult']).decode('utf-8')
-        self.assertRegex(log, re.compile(
-            re.escape("Invoking function 'handler_with_debug_logging' with parameters:\n$x\n[1] 1"), re.MULTILINE))
-        self.assertRegex(log, re.compile(re.escape("Function returned:\n[1] 1"), re.MULTILINE))
+        self.assertIn("Invoking function 'handler_with_debug_logging' with parameters:\n$x\n[1] 1", log)
+        self.assertIn("Function returned:\n[1] 1", log)
         self.assertIn("Sourcing 'script.R'", log)
+
+    @unittest.skipIf(is_local(), 'Lambda local does not support log retrieval')
+    def test_no_debug_logging(self):
+        lambda_client = self.get_client()
+        response = lambda_client.invoke(FunctionName=get_function_name("ExampleFunction"),
+                                        LogType='Tail',
+                                        Payload=json.dumps({'x': 1}),
+                                        )
+        raw_payload = response['Payload'].read().decode('utf-8')
+        result = json.loads(raw_payload)
+        self.assertEqual(2, result)
+        log = base64.b64decode(response['LogResult']).decode('utf-8')
+        self.assertNotIn("Invoking function 'handler_with_debug_logging' with parameters:\n$x\n[1] 1", log)
+        self.assertNotIn("Function returned:\n[1] 1", log)
+        self.assertNotIn("Sourcing 'script.R'", log)
 
     @unittest.skipIf(is_local(), 'Lambda local does not pass errors properly')
     def test_missing_source_file(self):
