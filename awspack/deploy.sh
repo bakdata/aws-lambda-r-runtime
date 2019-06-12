@@ -13,10 +13,11 @@ fi
 BASE_DIR=$(pwd)
 BUILD_DIR=${BASE_DIR}/build/
 
-./build.sh ${VERSION}
+cd ${BUILD_DIR}/layer/
 zip -r -q awspack-${VERSION}.zip .
 mkdir -p ${BUILD_DIR}/dist/
 mv awspack-${VERSION}.zip ${BUILD_DIR}/dist/
+version_="${VERSION//\./_}"
 aws lambda publish-layer-version \
-    --layer-name r-awspack-${VERSION} \
-    --zip-file fileb://build/dist/awspack-${VERSION}.zip
+    --layer-name r-awspack-${version_} \
+    --zip-file fileb://${BUILD_DIR}/dist/awspack-${VERSION}.zip

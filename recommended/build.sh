@@ -17,4 +17,4 @@ do
    mv R.orig/library/${package}/ R/library/${package}/
 done
 rm -rf R.orig/
-chmod -R 755 R/
+chmod -R 755 .
