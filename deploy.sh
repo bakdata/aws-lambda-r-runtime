@@ -28,25 +28,11 @@ function releaseToRegion {
         --no-fail-on-empty-changeset \
         --region ${region}
     layers=(runtime recommended awspack)
-    for layer in "${layers[@]}"
-    do
-        layer_output=${layer}Layer
-        layer_arn=$(aws cloudformation describe-stacks \
-                  --stack-name ${stack_name} \
-                  --query "Stacks[0].Outputs[?OutputKey=='$layer_output'].OutputValue" \
-                  --output text \
-                  --region ${region})
-        layer_name=${layer_arn%:*}
-        version_number=${layer_arn##*:}
-        aws lambda add-layer-version-permission \
-            --layer-name ${layer_name} \
-            --version-number ${version_number} \
-            --principal "*" \
-            --statement-id publish \
-            --action lambda:GetLayerVersion \
-            --region ${region}
-        echo "published layer $layer_arn"
-    done
+    echo "Published layers:"
+    aws cloudformation describe-stack-resources \
+        --stack-name ${stack_name} \
+        --query "StackResources[?ResourceType=='AWS::Lambda::LayerVersion'].PhysicalResourceId" \
+        --region ${region}
 }
 
 regions=(
