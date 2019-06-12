@@ -1,10 +1,12 @@
 FROM lambci/lambda:build-provided
 
-RUN yum install -q -y wget readline-devel \
+RUN yum install -q -y wget \
+    readline-devel \
     xorg-x11-server-devel libX11-devel libXt-devel \
     curl-devel \
     gcc-c++ gcc-gfortran \
-    zlib-devel bzip2 bzip2-libs
+    zlib-devel bzip2 bzip2-libs \
+    java-1.8.0-openjdk-devel
 
 ARG VERSION=3.6.0
 ARG R_DIR=/opt/R/
