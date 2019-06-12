@@ -122,7 +122,8 @@ class TestRuntimeLayer(unittest.TestCase):
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
         self.assertIn('there is no package called ‘Matrix’', json_payload['errorMessage'])
-        self.assertEqual(json_payload['errorType'], 'simpleError')
+        error_type = 'packageNotFoundError' if get_version() == '3_6_0' else 'simpleError'
+        self.assertEqual(json_payload['errorType'], error_type)
 
     @classmethod
     def tearDownClass(cls):
