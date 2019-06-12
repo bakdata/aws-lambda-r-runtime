@@ -12,7 +12,7 @@ post_error <- function(error, url) {
                 add_headers("Lambda-Runtime-Function-Error-Type" = "Unhandled"),
                 body = error_to_payload(error),
                 encode = "json")
-    loginfo("Posted result:\n%s", to_str(res))
+    logdebug("Posted result:\n%s", to_str(res))
 }
 
 get_source_file_name <- function(file_base_name) {
@@ -28,9 +28,9 @@ get_source_file_name <- function(file_base_name) {
 
 invoke_lambda <- function(EVENT_DATA, function_name) {
     params <- fromJSON(EVENT_DATA)
-    loginfo("Invoking function '%s' with parameters:\n%s", function_name, to_str(params))
+    logdebug("Invoking function '%s' with parameters:\n%s", function_name, to_str(params))
     result <- do.call(function_name, params)
-    loginfo("Function returned:\n%s", to_str(result))
+    logdebug("Function returned:\n%s", to_str(result))
     return(result)
 }
 
@@ -43,7 +43,7 @@ initializeRuntime <- function() {
     HANDLER_split <- strsplit(HANDLER, ".", fixed = TRUE)[[1]]
     file_base_name <- HANDLER_split[1]
     file_name <- get_source_file_name(file_base_name)
-    loginfo("Sourcing '%s'", file_name)
+    logdebug("Sourcing '%s'", file_name)
     source(file_name)
     function_name <- HANDLER_split[2]
     if (!exists(function_name, mode = "function")) {
@@ -69,7 +69,7 @@ throwRuntimeError <- function(error, REQUEST_ID) {
 postResult <- function(result, REQUEST_ID) {
     url <- paste0(API_ENDPOINT, "invocation/", REQUEST_ID, "/response")
     res <- POST(url, body = toJSON(result, auto_unbox = TRUE), encode = "raw", content_type_json())
-    loginfo("Posted result:\n%s", to_str(res))
+    logdebug("Posted result:\n%s", to_str(res))
 }
 
 handle_request <- function(function_name) {

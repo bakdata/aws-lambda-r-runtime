@@ -26,8 +26,8 @@ class TestAWSLayer(unittest.TestCase):
         response = lambda_client.invoke(FunctionName=get_function_name("AWSFunction"))
         raw_payload = response['Payload'].read().decode('utf-8')
         result = json.loads(raw_payload)
-        self.assertEqual(len(result), 1)
-        self.assertDictEqual(result[0], {
+        self.assertEqual(1, len(result))
+        self.assertDictEqual({
             "DRG.Definition": "039 - EXTRACRANIAL PROCEDURES W/O CC/MCC",
             "Provider.Id": "10001",
             "Provider.Name": "SOUTHEAST ALABAMA MEDICAL CENTER",
@@ -40,7 +40,7 @@ class TestAWSLayer(unittest.TestCase):
             "Average.Covered.Charges": "$32963.07",
             "Average.Total.Payments": "$5777.24",
             "Average.Medicare.Payments": "$4763.73"
-        })
+        }, result[0])
 
     @classmethod
     def tearDownClass(cls):

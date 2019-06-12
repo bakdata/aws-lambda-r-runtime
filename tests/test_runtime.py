@@ -1,5 +1,6 @@
+import base64
 import json
-import os
+import re
 import unittest
 
 import boto3
@@ -28,7 +29,7 @@ class TestRuntimeLayer(unittest.TestCase):
                                         )
         raw_payload = response['Payload'].read().decode('utf-8')
         result = json.loads(raw_payload)
-        self.assertEqual(result, 2)
+        self.assertEqual(2, result)
 
     def test_lowercase_extension(self):
         lambda_client = self.get_client()
@@ -37,7 +38,7 @@ class TestRuntimeLayer(unittest.TestCase):
                                         )
         raw_payload = response['Payload'].read().decode('utf-8')
         result = json.loads(raw_payload)
-        self.assertEqual(result, 2)
+        self.assertEqual(2, result)
 
     def test_multiple_arguments(self):
         lambda_client = self.get_client()
@@ -47,7 +48,23 @@ class TestRuntimeLayer(unittest.TestCase):
                                         )
         raw_payload = response['Payload'].read().decode('utf-8')
         result = json.loads(raw_payload)
-        self.assertDictEqual(result, payload)
+        self.assertDictEqual(payload, result)
+
+    @unittest.skipIf(is_local(), 'Lambda local does not support log retrieval')
+    def test_debug_logging(self):
+        lambda_client = self.get_client()
+        response = lambda_client.invoke(FunctionName=get_function_name("LoggingFunction"),
+                                        LogType='Tail',
+                                        Payload=json.dumps({'x': 1}),
+                                        )
+        raw_payload = response['Payload'].read().decode('utf-8')
+        result = json.loads(raw_payload)
+        self.assertEqual(1, result)
+        log = base64.b64decode(response['LogResult']).decode('utf-8')
+        self.assertRegex(log, re.compile(
+            re.escape("Invoking function 'handler_with_debug_logging' with parameters:\n$x\n[1] 1"), re.MULTILINE))
+        self.assertRegex(log, re.compile(re.escape("Function returned:\n[1] 1"), re.MULTILINE))
+        self.assertIn("Sourcing 'script.R'", log)
 
     @unittest.skipIf(is_local(), 'Lambda local does not pass errors properly')
     def test_missing_source_file(self):
@@ -58,7 +75,7 @@ class TestRuntimeLayer(unittest.TestCase):
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
         self.assertIn('Source file does not exist: missing.[R|r]', json_payload['errorMessage'])
-        self.assertEqual(json_payload['errorType'], 'simpleError')
+        self.assertEqual('simpleError', json_payload['errorType'])
 
     @unittest.skipIf(is_local(), 'Lambda local does not pass errors properly')
     def test_missing_function(self):
@@ -69,7 +86,7 @@ class TestRuntimeLayer(unittest.TestCase):
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
         self.assertIn('Function "handler_missing" does not exist', json_payload['errorMessage'])
-        self.assertEqual(json_payload['errorType'], 'simpleError')
+        self.assertEqual('simpleError', json_payload['errorType'])
 
     @unittest.skipIf(is_local(), 'Lambda local does not pass errors properly')
     def test_function_as_variable(self):
@@ -80,7 +97,7 @@ class TestRuntimeLayer(unittest.TestCase):
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
         self.assertIn('Function "handler_as_variable" does not exist', json_payload['errorMessage'])
-        self.assertEqual(json_payload['errorType'], 'simpleError')
+        self.assertEqual('simpleError', json_payload['errorType'])
 
     @unittest.skipIf(is_local(), 'Lambda local does not pass errors properly')
     def test_missing_argument(self):
@@ -89,7 +106,7 @@ class TestRuntimeLayer(unittest.TestCase):
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
         self.assertIn('argument "x" is missing, with no default', json_payload['errorMessage'])
-        self.assertEqual(json_payload['errorType'], 'simpleError')
+        self.assertEqual('simpleError', json_payload['errorType'])
 
     @unittest.skipIf(is_local(), 'Lambda local does not pass errors properly')
     def test_unused_argument(self):
@@ -100,9 +117,9 @@ class TestRuntimeLayer(unittest.TestCase):
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
         self.assertIn('unused argument (y = 1)', json_payload['errorMessage'])
-        self.assertEqual(json_payload['errorType'], 'simpleError')
+        self.assertEqual('simpleError', json_payload['errorType'])
 
-    @unittest.skip('Lambda local does not pass errors properly')
+    @unittest.skipIf(is_local(), 'Fails locally with "argument list too long"')
     def test_long_argument(self):
         lambda_client = self.get_client()
         payload = {x: x for x in range(0, 100000)}
@@ -110,8 +127,8 @@ class TestRuntimeLayer(unittest.TestCase):
                                         Payload=json.dumps(payload),
                                         )
         raw_payload = response['Payload'].read().decode('utf-8')
-        json_payload = json.loads(raw_payload)
-        self.assertEqual(json_payload['errorType'], 'Runtime.ExitError')
+        result = json.loads(raw_payload)
+        self.assertEqual(1, result)
 
     @unittest.skipIf(is_local(), 'Lambda local does not pass errors properly')
     def test_missing_library(self):
@@ -123,7 +140,7 @@ class TestRuntimeLayer(unittest.TestCase):
         json_payload = json.loads(raw_payload)
         self.assertIn('there is no package called ‘Matrix’', json_payload['errorMessage'])
         error_type = 'packageNotFoundError' if get_version() == '3_6_0' else 'simpleError'
-        self.assertEqual(json_payload['errorType'], error_type)
+        self.assertEqual(error_type, json_payload['errorType'])
 
     @classmethod
     def tearDownClass(cls):

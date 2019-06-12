@@ -25,7 +25,7 @@ class TestRecommendedLayer(unittest.TestCase):
         response = lambda_client.invoke(FunctionName=get_function_name("MatrixFunction"))
         raw_payload = response['Payload'].read().decode('utf-8')
         result = json.loads(raw_payload)
-        self.assertEqual(len(result), 3)
+        self.assertEqual(3, len(result))
         self.assertIn(4, result)
         self.assertIn(5, result)
         self.assertIn(6, result)
