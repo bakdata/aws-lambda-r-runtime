@@ -20,3 +20,15 @@ def wait_for_port(port: int, host: str = 'localhost', interval: int = 10, retrie
                          i, retries, host, port, e, interval)
             time.sleep(interval)
     return False
+
+
+def get_function_name(name: str) -> str:
+    return name if is_local() else '{0}-{1}'.format(name, get_version())
+
+
+def get_version() -> str:
+    return os.getenv('VERSION', '3_6_0')
+
+
+def is_local() -> bool:
+    return os.getenv('INTEGRATION_TEST') != 'True'

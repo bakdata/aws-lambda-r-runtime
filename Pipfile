@@ -7,7 +7,7 @@ name = "pypi"
 awscli = ">=1.16.164"
 
 [dev-packages]
-aws-sam-cli = ">=0.16.1"
+aws-sam-cli = ">=0.17.0"
 
 [requires]
 python_version = "3.7"

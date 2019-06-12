@@ -9,3 +9,5 @@ handler_with_multiple_arguments <- function(x, y) {
 handler_with_variable_arguments <- function(...) {
     return(1)
 }
+
+handler_as_variable <- "foo"

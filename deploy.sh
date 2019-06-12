@@ -13,47 +13,56 @@ fi
 function releaseToRegion {
     version=$1
     region=$2
-    layer=$3
     bucket="aws-lambda-r-runtime.$region"
-    resource="R-$version/$layer-$version.zip"
-    layer_name="r-$layer-$version"
-    layer_name="${layer_name//\./_}"
-    echo "publishing layer $layer_name to region $region"
-    aws s3 cp ${layer}/build/dist/${layer}-${version}.zip s3://${bucket}/${resource} --region ${region}
-    response=$(aws lambda publish-layer-version \
-        --layer-name ${layer_name} \
-        --content S3Bucket=${bucket},S3Key=${resource} \
-        --license-info MIT \
-        --region ${region})
-    version_number=$(jq -r '.Version' <<< "$response")
-    aws lambda add-layer-version-permission \
-        --layer-name ${layer_name} \
-        --version-number ${version_number} \
-        --principal "*" \
-        --statement-id publish \
-        --action lambda:GetLayerVersion \
+    echo "publishing layers to region $region"
+    sam package \
+        --output-template-file packaged.yaml \
+        --s3-bucket ${bucket} \
         --region ${region}
-    layer_arn=$(jq -r '.LayerVersionArn' <<< "$response")
-    echo "published layer $layer_arn"
+    version_="${version//\./_}"
+    stack_name=r-${version//\./-}
+    sam deploy \
+        --template-file packaged.yaml \
+        --stack-name ${stack_name} \
+        --parameter-overrides Version=${version_} \
+        --no-fail-on-empty-changeset \
+        --region ${region}
+    layers=(runtime recommended awspack)
+    for layer in "${layers[@]}"
+    do
+        layer_output=${layer}Layer
+        layer_arn=$(aws cloudformation describe-stacks \
+                  --stack-name ${stack_name} \
+                  --query "Stacks[0].Outputs[?OutputKey=='$layer_output'].OutputValue" \
+                  --output text \
+                  --region ${region})
+        layer_name=${layer_arn%:*}
+        version_number=${layer_arn##*:}
+        aws lambda add-layer-version-permission \
+            --layer-name ${layer_name} \
+            --version-number ${version_number} \
+            --principal "*" \
+            --statement-id publish \
+            --action lambda:GetLayerVersion \
+            --region ${region}
+        echo "published layer $layer_arn"
+    done
 }
 
-regions=(us-east-1 us-east-2
-         us-west-1 us-west-2
-         ap-south-1
-         ap-northeast-1 ap-northeast-2
-         ap-southeast-1 ap-southeast-2
-         ca-central-1
-         eu-central-1
-         eu-north-1
-         eu-west-1 eu-west-2 eu-west-3
-         sa-east-1)
+regions=(
+          us-east-1 us-east-2
+          us-west-1 us-west-2
+          ap-south-1
+          ap-northeast-1 ap-northeast-2
+          ap-southeast-1 ap-southeast-2
+          ca-central-1
+          eu-central-1
+          eu-north-1
+          eu-west-1 eu-west-2 eu-west-3
+          sa-east-1
+        )
 
-layers=(runtime recommended awspack)
-
-for layer in "${layers[@]}"
+for region in "${regions[@]}"
 do
-    for region in "${regions[@]}"
-    do
-        releaseToRegion ${VERSION} ${region} ${layer}
-    done
+    releaseToRegion ${VERSION} ${region}
 done

@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Parameters:
+  Version:
+    Type: String
+Globals:
+  Function:
+    Runtime: provided
+    Timeout: 300
+    MemorySize: 3008
+    Layers:
+      - !Ref RuntimeLayer
+Resources:
+  ExampleFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: script.handler
+      CodeUri: tests/R/
+      FunctionName: !Sub ExampleFunction-${Version}
+  LowerCaseExtensionFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: lowercase.handler
+      CodeUri: tests/R/
+      FunctionName: !Sub LowerCaseExtensionFunction-${Version}
+  MissingFunctionFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: script.handler_missing
+      CodeUri: tests/R/
+      FunctionName: !Sub MissingFunctionFunction-${Version}
+  HandlerAsVariableFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: script.handler_as_variable
+      CodeUri: tests/R/
+      FunctionName: !Sub HandlerAsVariableFunction-${Version}
+  MissingSourceFileFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: missing.handler
+      CodeUri: tests/R/
+      FunctionName: !Sub MissingSourceFileFunction-${Version}
+  MultipleArgumentsFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: script.handler_with_multiple_arguments
+      CodeUri: tests/R/
+      FunctionName: !Sub MultipleArgumentsFunction-${Version}
+  VariableArgumentsFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: script.handler_with_variable_arguments
+      CodeUri: tests/R/
+      FunctionName: !Sub VariableArgumentsFunction-${Version}
+  MatrixFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: matrix.handler
+      CodeUri: tests/R/
+      Layers:
+        - !Ref RecommendedLayer
+      FunctionName: !Sub MatrixFunction-${Version}
+  MissingLibraryFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: matrix.handler
+      CodeUri: tests/R/
+      FunctionName: !Sub MissingLibraryFunction-${Version}
+  AWSFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: aws.handler
+      CodeUri: tests/R/
+      Layers:
+        - !Ref AWSLayer
+      FunctionName: !Sub AWSFunction-${Version}
+  ApiFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: api.handler
+      CodeUri: tests/R/
+      FunctionName: !Sub ApiFunction-${Version}
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: '/hello'
+            Method: GET
+  RuntimeLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub r-runtime-${Version}-test
+      ContentUri: runtime/build/layer/
+      LicenseInfo: MIT
+  RecommendedLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub r-recommended-${Version}-test
+      ContentUri: recommended/build/layer/
+      LicenseInfo: MIT
+  AWSLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub r-awspack-${Version}-test
+      ContentUri: awspack/build/layer/
+      LicenseInfo: MIT
