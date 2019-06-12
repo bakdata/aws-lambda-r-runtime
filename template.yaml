@@ -17,25 +17,33 @@ Resources:
       LayerName: !Sub r-runtime-${Version}
       ContentUri: runtime/build/layer/
       LicenseInfo: MIT
+  RuntimeLayerPermission:
+    Type: AWS::Lambda::LayerVersionPermission
+    Properties:
+      Action: lambda:GetLayerVersion
+      LayerVersionArn: !Ref RuntimeLayer
+      Principal: "*"
   RecommendedLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: !Sub r-recommended-${Version}
       ContentUri: recommended/build/layer/
       LicenseInfo: MIT
+  RecommendedLayerPermission:
+    Type: AWS::Lambda::LayerVersionPermission
+    Properties:
+      Action: lambda:GetLayerVersion
+      LayerVersionArn: !Ref RecommendedLayer
+      Principal: "*"
   AWSLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: !Sub r-awspack-${Version}
       ContentUri: awspack/build/layer/
       LicenseInfo: MIT
-Outputs:
-  runtimeLayer:
-    Description: "Runtime layer ARN"
-    Value: !Ref RuntimeLayer
-  recommendedLayer:
-    Description: "Recommended layer ARN"
-    Value: !Ref RecommendedLayer
-  awspackLayer:
-    Description: "AWS layer ARN"
-    Value: !Ref AWSLayer
+  AWSLayerPermission:
+    Type: AWS::Lambda::LayerVersionPermission
+    Properties:
+      Action: lambda:GetLayerVersion
+      LayerVersionArn: !Ref AWSLayer
+      Principal: "*"
