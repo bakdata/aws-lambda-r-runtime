@@ -18,6 +18,7 @@ function releaseToRegion {
     sam package \
         --output-template-file packaged.yaml \
         --s3-bucket ${bucket} \
+        --s3-prefix R-${version}/ \
         --region ${region}
     version_="${version//\./_}"
     stack_name=r-${version//\./-}
