@@ -20,7 +20,7 @@ class TestAWSLayer(unittest.TestCase):
     def get_client(self):
         return self.lambda_server.get_client() if is_local() else boto3.client('lambda')
 
-    @unittest.skipUnless(is_local(), "Only works locally")
+    @unittest.skipUnless(is_local(), "Credentials missing for remote Lambda")
     def test_s3_get_object(self):
         lambda_client = self.get_client()
         response = lambda_client.invoke(FunctionName=get_function_name("AWSFunction"))

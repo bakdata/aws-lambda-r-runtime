@@ -76,7 +76,6 @@ class LocalLambdaServer:
                                         retries={'max_attempts': 0},
                                         )
         return boto3.client('lambda',
-                            region_name="eu-central-1",
                             endpoint_url="http://{}:{}".format(self.host, self.port),
                             use_ssl=False,
                             verify=False,
