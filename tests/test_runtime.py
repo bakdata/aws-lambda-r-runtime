@@ -90,6 +90,7 @@ class TestRuntimeLayer(unittest.TestCase):
                                         )
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
+        self.assertEqual('Unhandled', response['FunctionError'])
         self.assertIn('Source file does not exist: missing.[R|r]', json_payload['errorMessage'])
         self.assertEqual('simpleError', json_payload['errorType'])
 
@@ -101,6 +102,7 @@ class TestRuntimeLayer(unittest.TestCase):
                                         )
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
+        self.assertEqual('Unhandled', response['FunctionError'])
         self.assertIn('Function "handler_missing" does not exist', json_payload['errorMessage'])
         self.assertEqual('simpleError', json_payload['errorType'])
 
@@ -112,6 +114,7 @@ class TestRuntimeLayer(unittest.TestCase):
                                         )
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
+        self.assertEqual('Unhandled', response['FunctionError'])
         self.assertIn('Function "handler_as_variable" does not exist', json_payload['errorMessage'])
         self.assertEqual('simpleError', json_payload['errorType'])
 
@@ -121,6 +124,7 @@ class TestRuntimeLayer(unittest.TestCase):
         response = lambda_client.invoke(FunctionName=get_function_name("ExampleFunction"))
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
+        self.assertEqual('Unhandled', response['FunctionError'])
         self.assertIn('argument "x" is missing, with no default', json_payload['errorMessage'])
         self.assertEqual('simpleError', json_payload['errorType'])
 
@@ -132,6 +136,7 @@ class TestRuntimeLayer(unittest.TestCase):
                                         )
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
+        self.assertEqual('Unhandled', response['FunctionError'])
         self.assertIn('unused argument (y = 1)', json_payload['errorMessage'])
         self.assertEqual('simpleError', json_payload['errorType'])
 
@@ -154,6 +159,7 @@ class TestRuntimeLayer(unittest.TestCase):
                                         )
         raw_payload = response['Payload'].read().decode('utf-8')
         json_payload = json.loads(raw_payload)
+        self.assertEqual('Unhandled', response['FunctionError'])
         self.assertIn('there is no package called ‘Matrix’', json_payload['errorMessage'])
         error_type = 'packageNotFoundError' if get_version() == '3_6_0' else 'simpleError'
         self.assertEqual(error_type, json_payload['errorType'])
