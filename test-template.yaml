@@ -58,6 +58,9 @@ Resources:
     Properties:
       Handler: script.handler_with_debug_logging
       CodeUri: tests/R/
+      Environment:
+        Variables:
+          LOGLEVEL: DEBUG
       FunctionName: !Sub LoggingFunction-${Version}
   MatrixFunction:
     Type: 'AWS::Serverless::Function'

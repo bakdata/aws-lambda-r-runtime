@@ -13,6 +13,5 @@ handler_with_variable_arguments <- function(...) {
 handler_as_variable <- "foo"
 
 handler_with_debug_logging <- function(x) {
-    basicConfig(level='DEBUG')
     return(1)
 }

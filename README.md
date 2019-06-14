@@ -231,6 +231,10 @@ See `awspack/` for an example.
 The `build.sh` script is used to run the docker container and copy sources to your machine.
 The `entrypoint.sh` script is used for installing packages inside the container.
 
+### Debugging
+
+In order to make the runtime log debugging messages, you can set the environment variable `LOGLEVEL` to `DEBUG`.
+
 ## Limitations
 
 AWS Lambda is limited to running with 3GB RAM and must finish within 15 minutes.

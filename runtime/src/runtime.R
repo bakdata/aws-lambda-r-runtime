@@ -7,12 +7,12 @@ error_to_payload <- function(error) {
 }
 
 post_error <- function(error, url) {
-    logerror(error)
+    logerror(error, logger = 'runtime')
     res <- POST(url,
                 add_headers("Lambda-Runtime-Function-Error-Type" = "Unhandled"),
                 body = error_to_payload(error),
                 encode = "json")
-    logdebug("Posted result:\n%s", to_str(res))
+    logdebug("Posted result:\n%s", to_str(res), logger = 'runtime')
 }
 
 get_source_file_name <- function(file_base_name) {
@@ -28,22 +28,33 @@ get_source_file_name <- function(file_base_name) {
 
 invoke_lambda <- function(EVENT_DATA, function_name) {
     params <- fromJSON(EVENT_DATA)
-    logdebug("Invoking function '%s' with parameters:\n%s", function_name, to_str(params))
+    logdebug("Invoking function '%s' with parameters:\n%s", function_name, to_str(params), logger = 'runtime')
     result <- do.call(function_name, params)
-    logdebug("Function returned:\n%s", to_str(result))
+    logdebug("Function returned:\n%s", to_str(result), logger = 'runtime')
     return(result)
+}
+
+initializeLogging <- function() {
+    library(logging)
+
+    basicConfig()
+    addHandler(writeToConsole, logger='runtime')
+    log_level <- Sys.getenv('LOGLEVEL', unset = NA)
+    if (!is.na(log_level)) {
+        setLevel(log_level, 'runtime')
+    }
 }
 
 initializeRuntime <- function() {
     library(httr)
     library(jsonlite)
-    library(logging)
 
+    initializeLogging()
     HANDLER <- Sys.getenv("_HANDLER")
     HANDLER_split <- strsplit(HANDLER, ".", fixed = TRUE)[[1]]
     file_base_name <- HANDLER_split[1]
     file_name <- get_source_file_name(file_base_name)
-    logdebug("Sourcing '%s'", file_name)
+    logdebug("Sourcing '%s'", file_name, logger = 'runtime')
     source(file_name)
     function_name <- HANDLER_split[2]
     if (!exists(function_name, mode = "function")) {
@@ -69,7 +80,7 @@ throwRuntimeError <- function(error, REQUEST_ID) {
 postResult <- function(result, REQUEST_ID) {
     url <- paste0(API_ENDPOINT, "invocation/", REQUEST_ID, "/response")
     res <- POST(url, body = toJSON(result, auto_unbox = TRUE), encode = "raw", content_type_json())
-    logdebug("Posted result:\n%s", to_str(res))
+    logdebug("Posted result:\n%s", to_str(res), logger = 'runtime')
 }
 
 handle_request <- function(function_name) {
