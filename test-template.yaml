@@ -6,7 +6,7 @@ Parameters:
 Globals:
   Function:
     Runtime: provided
-    Timeout: 300
+    Timeout: 900
     MemorySize: 3008
     Layers:
       - !Ref RuntimeLayer
@@ -53,6 +53,15 @@ Resources:
       Handler: script.handler_with_variable_arguments
       CodeUri: tests/R/
       FunctionName: !Sub VariableArgumentsFunction-${Version}
+  LoggingFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: script.handler_with_debug_logging
+      CodeUri: tests/R/
+      Environment:
+        Variables:
+          LOGLEVEL: DEBUG
+      FunctionName: !Sub LoggingFunction-${Version}
   MatrixFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
