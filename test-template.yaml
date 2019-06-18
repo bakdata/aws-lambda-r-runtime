@@ -83,6 +83,9 @@ Resources:
       CodeUri: tests/R/
       Layers:
         - !Ref AWSLayer
+      Policies:
+        - S3ReadPolicy:
+            BucketName: "awsglue-datasets"
       FunctionName: !Sub AWSFunction-${Version}
   ApiFunction:
     Type: 'AWS::Serverless::Function'
