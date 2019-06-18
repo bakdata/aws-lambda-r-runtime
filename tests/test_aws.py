@@ -3,7 +3,7 @@ import unittest
 
 import boto3
 
-from tests import get_function_name, get_version, is_local
+from tests import get_function_name, get_version, is_local, travis
 from tests.sam import LocalLambdaServer, start_local_lambda
 
 
@@ -20,7 +20,7 @@ class TestAWSLayer(unittest.TestCase):
     def get_client(self):
         return self.lambda_server.get_client() if is_local() else boto3.client('lambda')
 
-    @unittest.skipUnless(is_local(), "Credentials missing for remote Lambda")
+    @unittest.skipIf(travis.is_pull_request(), "AWS secrets aren't available for pull requests")
     def test_s3_get_object(self):
         lambda_client = self.get_client()
         response = lambda_client.invoke(FunctionName=get_function_name("AWSFunction"))
