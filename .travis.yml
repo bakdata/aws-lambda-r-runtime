@@ -18,7 +18,7 @@ matrix:
 install:
   - pipenv install --dev
 script:
-  - ./build.sh ${R_VERSION} && LOGLEVEL=INFO VERSION=${R_VERSION//\./_} pipenv run python -m unittest && if [ "$TRAVIS_BRANCH" = "master" ]; then ./integration_test.sh ${R_VERSION} ; fi
+  - ./build.sh ${R_VERSION} && LOGLEVEL=INFO VERSION=${R_VERSION//\./_} pipenv run python -m unittest && if { [ "$TRAVIS_BRANCH" = "master" ] || [ "$TRAVIS_BRANCH" = "develop" ]; } && { [ "$TRAVIS_PULL_REQUEST" = "false" ] || [ "$TRAVIS_PULL_REQUEST_SLUG" = "$TRAVIS_REPO_SLUG" ]; }; then ./integration_test.sh ${R_VERSION} ; fi
 deploy:
   - provider: script
     script: ./deploy.sh $R_VERSION
