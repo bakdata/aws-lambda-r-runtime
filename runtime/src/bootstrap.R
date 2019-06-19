@@ -1,11 +1,11 @@
 source('/opt/runtime.R')
 tryCatch({
-    function_name <- initializeRuntime()
+    function_name <- initialize_runtime()
     while (TRUE) {
         handle_request(function_name)
         logReset()
         rm(list=ls())
         source('/opt/runtime.R')
-        function_name <- initializeRuntime()
+        function_name <- initialize_runtime()
     }
-}, error = throwInitError)
+}, error = throw_init_error)
