@@ -25,6 +25,6 @@ RUN ./configure --prefix=${R_DIR} --exec-prefix=${R_DIR} --with-libpth-prefix=/o
     cp /usr/lib64/libquadmath.so.0 lib/ && \
     cp /usr/lib64/libstdc++.so.6 lib/
 RUN yum install -q -y openssl-devel libxml2-devel && \
-    ./bin/Rscript -e 'install.packages(c("httr", "aws.s3", "logging"), repos="http://cran.r-project.org")'
+    ./bin/Rscript -e 'install.packages(c("httr", "aws.s3", "logging"), repos="http://cran.r-project.org", dependencies = c("Depends", "Imports"))'
 CMD mkdir -p /var/r/ && \
     cp -r bin/ lib/ etc/ library/ doc/ modules/ share/ /var/r/
