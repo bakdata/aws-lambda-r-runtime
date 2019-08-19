@@ -18,7 +18,7 @@ RUN wget -q https://cran.r-project.org/src/base/R-3/R-${VERSION}.tar.gz && \
     rm R-${VERSION}.tar.gz
 
 WORKDIR ${R_DIR}
-RUN ./configure --prefix=${R_DIR} --exec-prefix=${R_DIR} --with-libpth-prefix=/opt/ --enable-R-shlib && \
+RUN ./configure --prefix=${R_DIR} --exec-prefix=${R_DIR} --with-libpth-prefix=/opt/ --enable-R-shlib --without-recommended-packages && \
     make && \
     cp /usr/lib64/libgfortran.so.3 lib/ && \
     cp /usr/lib64/libgomp.so.1 lib/ && \
