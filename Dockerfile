@@ -18,13 +18,13 @@ RUN wget -q https://cran.r-project.org/src/base/R-3/R-${VERSION}.tar.gz && \
     rm R-${VERSION}.tar.gz
 
 WORKDIR ${R_DIR}
-RUN ./configure --prefix=${R_DIR} --exec-prefix=${R_DIR} --with-libpth-prefix=/opt/ --enable-R-shlib && \
+RUN ./configure --prefix=${R_DIR} --exec-prefix=${R_DIR} --with-libpth-prefix=/opt/ --enable-R-shlib --without-recommended-packages && \
     make && \
     cp /usr/lib64/libgfortran.so.3 lib/ && \
     cp /usr/lib64/libgomp.so.1 lib/ && \
     cp /usr/lib64/libquadmath.so.0 lib/ && \
     cp /usr/lib64/libstdc++.so.6 lib/
 RUN yum install -q -y openssl-devel libxml2-devel && \
-    ./bin/Rscript -e 'install.packages(c("httr", "aws.s3", "logging"), repos="http://cran.r-project.org")'
+    ./bin/Rscript -e 'install.packages(c("httr", "aws.s3", "logging"), repos="http://cran.r-project.org", dependencies = c("Depends", "Imports"))'
 CMD mkdir -p /var/r/ && \
     cp -r bin/ lib/ etc/ library/ doc/ modules/ share/ /var/r/

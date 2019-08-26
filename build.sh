@@ -17,6 +17,6 @@ cd ${BASE_DIR}/r
 cd ${BASE_DIR}/runtime
 ./build.sh
 cd ${BASE_DIR}/recommended
-./build.sh
+./build.sh ${VERSION}
 cd ${BASE_DIR}/awspack
 ./build.sh ${VERSION}
