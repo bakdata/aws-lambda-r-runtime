@@ -20,7 +20,8 @@ class TestAWSLayer(unittest.TestCase):
     def get_client(self):
         return self.lambda_server.get_client() if is_local() else boto3.client('lambda')
 
-    @unittest.skipUnless(is_local(), "Credentials missing for remote Lambda")
+#    @unittest.skipUnless(is_local(), "Credentials missing for remote Lambda")
+    @unittest.skip('awspack has been removed from cran')
     def test_s3_get_object(self):
         lambda_client = self.get_client()
         response = lambda_client.invoke(FunctionName=get_function_name("AWSFunction"))
