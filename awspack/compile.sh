@@ -18,5 +18,5 @@ rm -rf ${BUILD_DIR}
 
 export R_LIBS=${BUILD_DIR}/layer/R/library
 mkdir -p ${R_LIBS}
-${R_DIR}/bin/Rscript -e 'install.packages("awspack", repos="http://cran.r-project.org")'
+${R_DIR}/bin/Rscript -e 'install.packages("aws.s3", repos="http://cran.r-project.org")'
 chmod -R 755 ${BUILD_DIR}/layer/
