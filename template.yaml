@@ -35,15 +35,15 @@ Resources:
       Action: lambda:GetLayerVersion
       LayerVersionArn: !Ref RecommendedLayer
       Principal: "*"
-#  AWSLayer:
-#    Type: AWS::Serverless::LayerVersion
-#    Properties:
-#      LayerName: !Sub r-awspack-${Version}
-#      ContentUri: awspack/build/layer/
-#      LicenseInfo: MIT
-#  AWSLayerPermission:
-#    Type: AWS::Lambda::LayerVersionPermission
-#    Properties:
-#      Action: lambda:GetLayerVersion
-#      LayerVersionArn: !Ref AWSLayer
-#      Principal: "*"
+  AWSLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub r-awspack-${Version}
+      ContentUri: awspack/build/layer/
+      LicenseInfo: MIT
+  AWSLayerPermission:
+    Type: AWS::Lambda::LayerVersionPermission
+    Properties:
+      Action: lambda:GetLayerVersion
+      LayerVersionArn: !Ref AWSLayer
+      Principal: "*"

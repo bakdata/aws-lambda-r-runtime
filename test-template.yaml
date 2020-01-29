@@ -76,14 +76,14 @@ Resources:
       Handler: matrix.handler
       CodeUri: tests/R/
       FunctionName: !Sub MissingLibraryFunction-${Version}
-#  AWSFunction:
-#    Type: 'AWS::Serverless::Function'
-#    Properties:
-#      Handler: aws.handler
-#      CodeUri: tests/R/
-#      Layers:
-#        - !Ref AWSLayer
-#      FunctionName: !Sub AWSFunction-${Version}
+  AWSFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: aws.handler
+      CodeUri: tests/R/
+      Layers:
+        - !Ref AWSLayer
+      FunctionName: !Sub AWSFunction-${Version}
   ApiFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -108,9 +108,9 @@ Resources:
       LayerName: !Sub r-recommended-${Version}-test
       ContentUri: recommended/build/layer/
       LicenseInfo: MIT
-#  AWSLayer:
-#    Type: AWS::Serverless::LayerVersion
-#    Properties:
-#      LayerName: !Sub r-awspack-${Version}-test
-#      ContentUri: awspack/build/layer/
-#      LicenseInfo: MIT
+  AWSLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub r-awspack-${Version}-test
+      ContentUri: awspack/build/layer/
+      LicenseInfo: MIT
