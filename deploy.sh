@@ -27,7 +27,8 @@ function releaseToRegion {
         --stack-name ${stack_name} \
         --parameter-overrides Version=${version_} \
         --no-fail-on-empty-changeset \
-        --region ${region}
+        --region ${region} \
+        --capabilities CAPABILITY_IAM
     layers=(runtime recommended awspack)
     echo "Published layers:"
     aws cloudformation describe-stack-resources \

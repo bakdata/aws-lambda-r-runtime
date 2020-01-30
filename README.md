@@ -19,10 +19,10 @@ chmod 755 script.R
 zip function.zip script.R
 # current region
 region=$(aws configure get region)
-# latest runtime layer ARN for R 3.6.0
-runtime_layer=$(aws lambda list-layer-versions --max-items 1 --no-paginate  \
-    --layer-name arn:aws:lambda:${region}:131329294410:layer:r-runtime-3_6_0 \
-    --query 'LayerVersions[0].LayerVersionArn' --output text)
+# latest runtime layer ARN for R 3.6.0 in most regions
+# for an accurate list, please have a look at the deploy section of the travis ci build log
+# https://travis-ci.com/bakdata/aws-lambda-r-runtime
+runtime_layer=arn:aws:lambda:$region:131329294410:layer:r-runtime-3_6_0:13
 aws lambda create-function --function-name r-example \
     --zip-file fileb://function.zip --handler script.handler \
     --runtime provided --timeout 60 \
@@ -53,14 +53,14 @@ chmod 755 matrix.R
 zip function.zip matrix.R
 # current region
 region=$(aws configure get region)
-# latest runtime layer ARN for R 3.6.0
-runtime_layer=$(aws lambda list-layer-versions --max-items 1 --no-paginate  \
-    --layer-name arn:aws:lambda:${region}:131329294410:layer:r-runtime-3_6_0 \
-    --query 'LayerVersions[0].LayerVersionArn' --output text)
-# latest recommended layer ARN for R 3.6.0
-recommended_layer=$(aws lambda list-layer-versions --max-items 1 --no-paginate  \
-    --layer-name arn:aws:lambda:${region}:131329294410:layer:r-recommended-3_6_0 \
-    --query 'LayerVersions[0].LayerVersionArn' --output text)
+# latest runtime layer ARN for R 3.6.0 in most regions
+# for an accurate list, please have a look at the deploy section of the travis ci build log
+# https://travis-ci.com/bakdata/aws-lambda-r-runtime
+runtime_layer=arn:aws:lambda:$region:131329294410:layer:r-runtime-3_6_0:13
+# latest recommended layer ARN for R 3.6.0 in most regions
+# for an accurate list, please have a look at the deploy section of the travis ci build log
+# https://travis-ci.com/bakdata/aws-lambda-r-runtime
+recommended_layer=arn:aws:lambda:$region:131329294410:layer:r-recommended-3_6_0:13
 aws lambda create-function --function-name r-matrix-example \
     --zip-file fileb://function.zip --handler matrix.handler \
     --runtime provided --timeout 60 --memory-size 3008 \
@@ -116,7 +116,11 @@ Available R versions:
 - 3_5_3
 - 3_6_0
 
-Latest ARN: 
+Latest ARN can be retrieved from the [Travis CI build log](https://travis-ci.com/bakdata/aws-lambda-r-runtime). In general, it looks this:
+
+`arn:aws:lambda:$region:131329294410:layer:r-runtime-$r_version:$layer_version`
+
+Automated command for retrieving the ARN does not work currently:
 ```bash
 aws lambda list-layer-versions --max-items 1 --no-paginate  \
     --layer-name arn:aws:lambda:${region}:131329294410:layer:r-runtime-${r_version} \
@@ -165,7 +169,11 @@ Available R versions:
 - 3_5_3
 - 3_6_0
 
-Latest ARN:
+Latest ARN can be retrieved from the [Travis CI build log](https://travis-ci.com/bakdata/aws-lambda-r-runtime). In general, it looks this:
+
+`arn:aws:lambda:$region:131329294410:layer:r-recommended-$r_version:$layer_version`
+
+Automated command for retrieving the ARN does not work currently:
 ```bash
 aws lambda list-layer-versions --max-items 1 --no-paginate  \
     --layer-name arn:aws:lambda:${region}:131329294410:layer:r-recommended-${r_version} \
@@ -174,7 +182,9 @@ aws lambda list-layer-versions --max-items 1 --no-paginate  \
 
 ### r-awspack
 
-The [awspack](https://cran.r-project.org/package=awspack) package
+The [aws.s3](https://cran.r-project.org/package=aws.s3) package.
+It used to contain the [awspack](https://cran.r-project.org/package=awspack) package but unfortunately this package has been retired.
+You can still find it in old versions of the layer that have been published before 2020.
 
 Available AWS regions:
 - ap-northeast-1
@@ -199,7 +209,11 @@ Available R versions:
 - 3_5_3
 - 3_6_0
 
-Latest ARN:
+Latest ARN can be retrieved from the [Travis CI build log](https://travis-ci.com/bakdata/aws-lambda-r-runtime). In general, it looks this:
+
+`arn:aws:lambda:$region:131329294410:layer:r-awspack-$r_version:$layer_version`
+
+Automated command for retrieving the ARN does not work currently:
 ```bash
 aws lambda list-layer-versions --max-items 1 --no-paginate  \
     --layer-name arn:aws:lambda:${region}:131329294410:layer:r-awspack-${r_version} \
