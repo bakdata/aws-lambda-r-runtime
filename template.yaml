@@ -11,6 +11,18 @@ Globals:
     Layers:
       - !Ref RuntimeLayer
 Resources:
+  RLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub r-${Version}
+      ContentUri: r/build/layer/
+      LicenseInfo: MIT
+  RLayerPermission:
+    Type: AWS::Lambda::LayerVersionPermission
+    Properties:
+      Action: lambda:GetLayerVersion
+      LayerVersionArn: !Ref RLayer
+      Principal: "*"
   RuntimeLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
